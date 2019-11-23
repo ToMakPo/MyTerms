@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".term.TermEditActivity">
+
+    <RelativeLayout
+        android:fitsSystemWindows="true"
+        android:padding="@dimen/root_padding"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- HEADER -->
+        <TextView
+            android:id="@+id/header"
+            android:text="@string/new_term"
+            android:textSize="@dimen/header_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Title -->
+        <RelativeLayout
+            android:id="@+id/title_box"
+            android:background="@drawable/bg_form_info"
+            android:layout_margin="@dimen/form_info_margin"
+            android:layout_below="@id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/title_label"
+                android:text="@string/title"
+                android:textSize="@dimen/label_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/title_text_box"
+                android:inputType="text"
+                android:background="@android:color/transparent"
+                android:textSize="@dimen/form_info_text_size"
+                android:layout_below="@+id/title_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/title_error_icon"
+                android:contentDescription="@string/error"
+                android:src="@drawable/ic_error"
+                android:onClick="showTitleErrorMessage"
+                android:visibility="gone"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="9dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+        <!-- Start Date -->
+        <RelativeLayout
+            android:id="@+id/start_date_box"
+            android:background="@drawable/bg_form_info"
+            android:layout_margin="@dimen/form_info_margin"
+            android:layout_below="@id/title_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/start_date_label"
+                android:text="@string/start_date"
+                android:textSize="@dimen/label_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/start_date_display"
+                android:onClick="selectStartDate"
+                android:background="@android:color/transparent"
+                android:textSize="@dimen/form_info_text_size"
+                android:focusable="true"
+                android:layout_below="@+id/start_date_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/start_date_error_icon"
+                android:contentDescription="@string/error"
+                android:src="@drawable/ic_error"
+                android:onClick="showStartDateErrorMessage"
+                android:visibility="gone"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="9dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+        <!-- End Date -->
+        <RelativeLayout
+            android:id="@+id/end_date_box"
+            android:background="@drawable/bg_form_info"
+            android:layout_margin="@dimen/form_info_margin"
+            android:layout_below="@id/start_date_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/end_date_label"
+                android:text="@string/end_date"
+                android:textSize="@dimen/label_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/end_date_display"
+                android:onClick="selectEndDate"
+                android:background="@android:color/transparent"
+                android:textSize="@dimen/form_info_text_size"
+                android:focusable="true"
+                android:layout_below="@+id/end_date_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/end_date_error_icon"
+                android:contentDescription="@string/error"
+                android:src="@drawable/ic_error"
+                android:onClick="showEndDateErrorMessage"
+                android:visibility="gone"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="9dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+        <!-- BUTTONS -->
+        <Button
+            android:id="@+id/save_button"
+            android:text="@string/save"
+            android:onClick="saveTerm"
+            android:background="@drawable/bg_button_green"
+            android:textColor="@color/green_button_fg"
+            android:padding="@dimen/button_padding"
+            android:layout_marginStart="@dimen/between_button_margin"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:text="@string/cancel"
+            android:onClick="close"
+            android:background="@drawable/bg_button_grey"
+            android:textColor="@color/grey_button_fg"
+            android:padding="@dimen/button_padding"
+            android:layout_toStartOf="@id/save_button"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/delete_button"
+            android:text="@string/delete"
+            android:onClick="deleteTerm"
+            android:visibility="gone"
+            android:background="@drawable/bg_button_red"
+            android:textColor="@color/red_button_fg"
+            android:padding="@dimen/button_padding"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <!-- DELETE TERM ERROR POPUP -->
+    <RelativeLayout
+        android:id="@+id/delete_term_error_popup"
+        android:visibility="gone"
+        android:clickable="true"
+        android:background="@color/popup_bg_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:background="@color/popup_bg"
+            android:padding="@dimen/root_padding"
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- ERROR MESSAGE -->
+            <TextView
+                android:id="@+id/delete_term_error_message"
+                android:textSize="@dimen/popup_text_size"
+                android:textColor="@color/popup_fg"
+                android:text="@string/delete_term_error_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- BUTTONS -->
+            <LinearLayout
+                android:layout_below="@id/delete_term_error_message"
+                android:padding="@dimen/popup_padding"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/dont_delete_term_button"
+                    android:text="@string/keep_term"
+                    android:onClick="closePopup"
+                    android:background="@drawable/bg_button_green"
+                    android:textColor="@color/green_button_fg"
+                    android:padding="@dimen/button_padding"
+                    android:layout_margin="@dimen/between_button_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/delete_courses_button"
+                    android:text="@string/delete_courses"
+                    android:onClick="deleteCourses"
+                    android:background="@drawable/bg_button_red"
+                    android:textColor="@color/red_button_fg"
+                    android:padding="@dimen/button_padding"
+                    android:layout_margin="@dimen/between_button_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

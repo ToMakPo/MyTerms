@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/root_padding"
+    tools:context=".term.TermSelectActivity">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/header"
+        android:text="@string/select_terms"
+        android:textSize="@dimen/header_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- Term List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/term_recycler"
+        android:layout_marginBottom="@dimen/between_button_margin"
+        android:layout_below="@id/header"
+        android:layout_above="@id/confirm_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/selected_term_error_icon"
+        android:contentDescription="@string/error"
+        android:src="@drawable/ic_error"
+        android:onClick="showSelectedTermErrorMessage"
+        android:visibility="gone"
+        android:background="@android:color/transparent"
+        android:layout_marginTop="9dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- Buttons -->
+    <Button
+        android:id="@+id/confirm_button"
+        android:text="@string/confirm"
+        android:onClick="confirmSelection"
+        android:textColor="@color/green_button_fg"
+        android:background="@drawable/bg_button_green"
+        android:padding="@dimen/button_padding"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:text="@string/cancel"
+        android:onClick="close"
+        android:textColor="@color/grey_button_fg"
+        android:background="@drawable/bg_button_grey"
+        android:padding="@dimen/button_padding"
+        android:layout_marginEnd="@dimen/between_button_margin"
+        android:layout_toStartOf="@id/confirm_button"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

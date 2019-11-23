@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="header_text_size">28sp</dimen>
+    <dimen name="sub_header_text_size">20sp</dimen>
+    <dimen name="label_text_size">12sp</dimen>
+    <dimen name="between_button_margin">5dp</dimen>
+    <dimen name="root_padding">10dp</dimen>
+    <dimen name="popup_text_size">24sp</dimen>
+    <dimen name="popup_padding">20dp</dimen>
+    <dimen name="button_padding">15dp</dimen>
+    <dimen name="form_info_text_size">18sp</dimen>
+    <dimen name="form_info_inset_horizontal_material">4dp</dimen>
+    <dimen name="form_info_inset_top_material">10dp</dimen>
+    <dimen name="form_info_inset_bottom_material">7dp</dimen>
+    <dimen name="form_info_height">40dp</dimen>
+    <dimen name="input_horizontal_padding">10dp</dimen>
+    <dimen name="form_info_margin">5dp</dimen>
+</resources>

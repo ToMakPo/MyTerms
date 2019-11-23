@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/root_padding"
+    tools:context=".assessment.AssessmentEditActivity">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/header"
+        android:text="@string/new_assessment"
+        android:textSize="@dimen/header_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- Course -->
+    <RelativeLayout
+        android:id="@+id/course_box"
+        android:background="@drawable/bg_form_info"
+        android:layout_margin="@dimen/form_info_margin"
+        android:layout_below="@id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/course_label"
+            android:text="@string/course"
+            android:textSize="@dimen/label_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/course_display"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/form_info_text_size"
+            android:layout_below="@+id/course_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <!-- Name -->
+    <RelativeLayout
+        android:id="@+id/name_box"
+        android:background="@drawable/bg_form_info"
+        android:layout_margin="@dimen/form_info_margin"
+        android:layout_below="@id/course_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/name_label"
+            android:text="@string/name"
+            android:textSize="@dimen/label_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/name_text_box"
+            android:inputType="text"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/form_info_text_size"
+            android:layout_below="@+id/name_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/name_error_icon"
+            android:contentDescription="@string/error"
+            android:src="@drawable/ic_error"
+            android:onClick="showNameErrorMessage"
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="9dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <!-- Description -->
+    <RelativeLayout
+        android:id="@+id/description_box"
+        android:background="@drawable/bg_form_info"
+        android:layout_margin="@dimen/form_info_margin"
+        android:layout_below="@id/name_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/description_label"
+            android:text="@string/description"
+            android:textSize="@dimen/label_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/description_text_box"
+            android:inputType="textMultiLine"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/form_info_text_size"
+            android:layout_below="@+id/description_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/description_error_icon"
+            android:contentDescription="@string/error"
+            android:src="@drawable/ic_error"
+            android:onClick="showDescriptionErrorMessage"
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="9dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <!-- Completion Date -->
+    <RelativeLayout
+        android:id="@+id/completion_date_box"
+        android:background="@drawable/bg_form_info"
+        android:layout_margin="@dimen/form_info_margin"
+        android:layout_below="@id/description_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/completion_date_label"
+            android:text="@string/completion_date"
+            android:textSize="@dimen/label_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/completion_date_display"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/form_info_text_size"
+            android:focusable="true"
+            android:onClick="selectCompletionDate"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/complete_check_box"
+            android:layout_below="@+id/completion_date_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/completion_date_error_icon"
+            android:contentDescription="@string/error"
+            android:src="@drawable/ic_error"
+            android:onClick="showCompletionDateErrorMessage"
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="9dp"
+            android:layout_marginEnd="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/complete_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:id="@+id/complete_check_box"
+            android:text="@string/complete"
+            android:button="@null"
+            android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/label_text_size"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <!-- Alarm -->
+    <RelativeLayout
+        android:id="@+id/alarm_start_box"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:onClick="selectAlarmDate"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/alarm_display"
+            android:text="12/25/19\n9:30 AM"
+            android:textSize="10sp"
+            android:textAlignment="textEnd"
+            android:paddingHorizontal="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/set_alarm_button"
+            android:src="@drawable/ic_alarm"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/set_alarm"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/alarm_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <!-- Buttons -->
+    <Button
+        android:id="@+id/save_button"
+        android:text="@string/save"
+        android:onClick="saveAssessment"
+        android:textColor="@color/green_button_fg"
+        android:background="@drawable/bg_button_green"
+        android:padding="@dimen/button_padding"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:text="@string/cancel"
+        android:onClick="close"
+        android:textColor="@color/grey_button_fg"
+        android:background="@drawable/bg_button_grey"
+        android:padding="@dimen/button_padding"
+        android:layout_marginEnd="@dimen/between_button_margin"
+        android:layout_toStartOf="@id/save_button"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/delete_button"
+        android:text="@string/delete"
+        android:onClick="deleteAssessment"
+        android:visibility="gone"
+        android:textColor="@color/red_button_fg"
+        android:background="@drawable/bg_button_red"
+        android:padding="@dimen/button_padding"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_margin="2.5dp"
+        android:padding="2.5dp"
+        android:addStatesFromChildren="true"
+        android:background="@drawable/bg_selectable_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/selected_state"
+            android:checked="false"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/title_display"
+            android:text="@string/term_title"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_toStartOf="@id/completed_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/completed_icon"
+            android:contentDescription="@string/complete"
+            android:src="@drawable/ic_status_complete"
+            android:visibility="invisible"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/date_display"
+            android:text="@string/start_and_end_dates"
+            android:layout_below="@id/title_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/credits_display"
+            android:text="@string/term_credits_display_default"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/title_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

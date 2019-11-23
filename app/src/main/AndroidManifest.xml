@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.myterms">
+
+    <application
+        android:name="com.example.myterms.application.App"
+        android:allowBackup="true"
+        android:fullBackupContent="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <activity android:name="com.example.myterms.application.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.example.myterms.dashboard.DashboardActivity" />
+        <activity android:name="com.example.myterms.term.TermViewActivity" />
+        <activity
+            android:name="com.example.myterms.term.TermEditActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.example.myterms.term.TermSelectActivity" />
+        <activity android:name="com.example.myterms.course.CourseViewActivity" />
+        <activity
+            android:name="com.example.myterms.course.CourseEditActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.example.myterms.mentor.MentorSelectActivity" />
+        <activity
+            android:name="com.example.myterms.mentor.MentorEditActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.example.myterms.assessment.AssessmentEditActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.example.myterms.note.NoteEditActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <receiver
+            android:name="com.example.myterms.notifications.Alarm"
+            android:enabled="true"
+            android:exported="true" />
+
+    </application>
+
+</manifest>

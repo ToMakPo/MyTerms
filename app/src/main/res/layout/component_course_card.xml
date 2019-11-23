@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/title_display"
+            android:text="@string/course_title"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_toStartOf="@id/completed_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/date_display"
+            android:text="@string/start_and_end_dates"
+            android:layout_below="@id/title_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/credits_display"
+            android:text="@string/course_credits_display_default"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@id/date_display"
+            android:layout_below="@id/title_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/completed_icon"
+            android:src="@drawable/ic_status_complete"
+            android:contentDescription="@string/complete"
+            android:visibility="gone"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/in_progress_icon"
+            android:src="@drawable/ic_status_in_progress"
+            android:contentDescription="@string/in_progress"
+            android:visibility="gone"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/plan_to_take_icon"
+            android:src="@drawable/ic_status_plan_to_take"
+            android:contentDescription="@string/plan_to_take"
+            android:visibility="visible"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/dropped_icon"
+            android:src="@drawable/ic_status_dropped"
+            android:contentDescription="@string/dropped"
+            android:visibility="gone"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

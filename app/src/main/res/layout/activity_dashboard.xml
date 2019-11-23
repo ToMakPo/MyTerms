@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="@dimen/root_padding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:showIn="@layout/activity_dashboard"
+    tools:context=".dashboard.DashboardActivity">
+
+    <TextView
+        android:id="@+id/header"
+        android:text="@string/term_list"
+        android:textSize="@dimen/header_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/view_active_check_box"
+        android:text="@string/view_active"
+        android:textSize="@dimen/label_text_size"
+        android:button="@null"
+        android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+        android:background="@android:color/transparent"
+        android:onClick="toggleList"
+        android:checked="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/term_recycler"
+        android:layout_below="@+id/header"
+        android:layout_above="@+id/create_term_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/create_term_button"
+        android:contentDescription="@string/new_term"
+        android:src="@drawable/ic_add"
+        android:background="@android:color/transparent"
+        android:onClick="createNewTerm"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
+
+</RelativeLayout>

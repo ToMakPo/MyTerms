@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/name_display"
+            android:text="@string/mentor_name"
+            android:textSize="@dimen/sub_header_text_size"
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+</androidx.cardview.widget.CardView>

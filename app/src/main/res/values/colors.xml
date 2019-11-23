@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="error_icon">#D95454</color>
+    <color name="edit_icon">#54D996</color>
+    <color name="red_button_bg">#D95454</color>
+    <color name="red_button_fg">#2B1010</color>
+    <color name="green_button_bg">#BADA55</color>
+    <color name="green_button_fg">#252B11</color>
+    <color name="grey_button_bg">#969696</color>
+    <color name="grey_button_fg">#1E1E1E</color>
+    <color name="blue_button_bg">#54B8D9</color>
+    <color name="blue_button_fg">#081215</color>
+    <color name="popup_fg">#CBCBCB</color>
+    <color name="popup_bg">#333</color>
+    <color name="popup_bg_mask">#A000</color>
+</resources>

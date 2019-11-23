@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:padding="@dimen/root_padding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".course.CourseEditActivity">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/header"
+        android:text="@string/new_course"
+        android:textSize="@dimen/header_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- Term -->
+    <RelativeLayout
+        android:id="@+id/term_box"
+        android:background="@drawable/bg_form_info"
+        android:layout_margin="@dimen/form_info_margin"
+        android:layout_below="@id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/term_label"
+            android:text="@string/term"
+            android:textSize="@dimen/label_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/terms_display"
+            android:onClick="selectTerm"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/form_info_text_size"
+            android:layout_below="@+id/term_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/term_error_icon"
+            android:contentDescription="@string/error"
+            android:src="@drawable/ic_error"
+            android:onClick="showTermErrorMessage"
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="9dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <!-- Title -->
+    <RelativeLayout
+        android:id="@+id/title_box"
+        android:background="@drawable/bg_form_info"
+        android:layout_margin="@dimen/form_info_margin"
+        android:layout_below="@id/term_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/title_label"
+            android:text="@string/title"
+            android:textSize="@dimen/label_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/title_text_box"
+            android:inputType="text"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/form_info_text_size"
+            android:layout_below="@+id/title_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/title_error_icon"
+            android:contentDescription="@string/error"
+            android:src="@drawable/ic_error"
+            android:onClick="showTitleErrorMessage"
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="9dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <!-- Mentors -->
+    <RelativeLayout
+        android:id="@+id/mentors_box"
+        android:background="@drawable/bg_form_info"
+        android:layout_margin="@dimen/form_info_margin"
+        android:layout_below="@id/title_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/mentors_label"
+            android:text="@string/mentors"
+            android:textSize="@dimen/label_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/mentors_display"
+            android:onClick="selectMentors"
+            android:focusable="true"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/form_info_text_size"
+            android:layout_below="@+id/mentors_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/mentors_error_icon"
+            android:contentDescription="@string/error"
+            android:src="@drawable/ic_error"
+            android:onClick="showMentorsErrorMessage"
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="9dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <!-- Credits -->
+    <RelativeLayout
+        android:id="@+id/credits_box"
+        android:background="@drawable/bg_form_info"
+        android:layout_margin="@dimen/form_info_margin"
+        android:layout_below="@id/mentors_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/credits_label"
+            android:text="@string/credits"
+            android:textSize="@dimen/label_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/credits_text_box"
+            android:inputType="number"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/form_info_text_size"
+            android:layout_below="@+id/credits_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/credits_error_icon"
+            android:contentDescription="@string/error"
+            android:src="@drawable/ic_error"
+            android:onClick="showCreditsErrorMessage"
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="9dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <!-- Start Date -->
+    <RelativeLayout
+        android:id="@+id/start_date_box"
+        android:background="@drawable/bg_form_info"
+        android:layout_margin="@dimen/form_info_margin"
+        android:layout_below="@id/credits_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/start_date_label"
+            android:text="@string/start_date"
+            android:textSize="@dimen/label_text_size"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/start_date_error_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/start_date_display"
+            android:onClick="selectStartDate"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/form_info_text_size"
+            android:focusable="true"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/start_date_error_icon"
+            android:layout_below="@id/start_date_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/start_date_error_icon"
+            android:contentDescription="@string/error"
+            android:src="@drawable/ic_error"
+            android:onClick="showStartDateErrorMessage"
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="9dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/alarm_start_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
+        <RelativeLayout
+            android:id="@+id/alarm_start_box"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/start_alarm_display"
+                android:text="12/25/19\n9:30 AM"
+                android:textSize="10sp"
+                android:onClick="selectStartAlarmDate"
+                android:textAlignment="textEnd"
+                android:paddingHorizontal="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/set_start_alarm_button"
+                android:src="@drawable/ic_alarm"
+                android:onClick="selectStartAlarmDate"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/set_alarm"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/start_alarm_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+        
+    </RelativeLayout>
+
+    <!-- End Date -->
+    <RelativeLayout
+        android:id="@+id/end_date_box"
+        android:background="@drawable/bg_form_info"
+        android:layout_margin="@dimen/form_info_margin"
+        android:layout_below="@id/start_date_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/end_date_label"
+            android:text="@string/end_date"
+            android:textSize="@dimen/label_text_size"
+            android:layout_alignParentStart="true"
+            android:layout_toEndOf="@id/end_date_error_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/end_date_display"
+            android:onClick="selectEndDate"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/form_info_text_size"
+            android:focusable="true"
+            android:layout_alignParentStart="true"
+            android:layout_toEndOf="@id/end_date_error_icon"
+            android:layout_below="@id/end_date_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/end_date_error_icon"
+            android:contentDescription="@string/error"
+            android:src="@drawable/ic_error"
+            android:onClick="showEndDateErrorMessage"
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="9dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/alarm_end_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:id="@+id/alarm_end_box"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/end_alarm_display"
+                android:text="12/25/19\n9:30 AM"
+                android:textSize="10sp"
+                android:onClick="selectEndAlarmDate"
+                android:textAlignment="textEnd"
+                android:paddingHorizontal="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/set_end_alarm_button"
+                android:src="@drawable/ic_alarm"
+                android:onClick="selectEndAlarmDate"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/set_alarm"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/end_alarm_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <!-- Status -->
+    <RelativeLayout
+        android:id="@+id/status_box"
+        android:background="@drawable/bg_form_info"
+        android:layout_margin="@dimen/form_info_margin"
+        android:layout_below="@id/end_date_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/status_label"
+            android:text="@string/status"
+            android:textSize="@dimen/label_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/status_display"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/form_info_text_size"
+            android:layout_below="@+id/status_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <!-- Buttons -->
+    <Button
+        android:id="@+id/save_button"
+        android:text="@string/save"
+        android:onClick="saveCourse"
+        android:textColor="@color/green_button_fg"
+        android:background="@drawable/bg_button_green"
+        android:padding="@dimen/button_padding"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:text="@string/cancel"
+        android:onClick="close"
+        android:textColor="@color/grey_button_fg"
+        android:background="@drawable/bg_button_grey"
+        android:padding="@dimen/button_padding"
+        android:layout_marginEnd="@dimen/between_button_margin"
+        android:layout_toStartOf="@id/save_button"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/drop_button"
+        android:text="@string/drop"
+        android:onClick="dropCourse"
+        android:visibility="gone"
+        android:textColor="@color/red_button_fg"
+        android:background="@drawable/bg_button_red"
+        android:padding="@dimen/button_padding"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/restore_button"
+        android:text="@string/restore"
+        android:onClick="restoreCourse"
+        android:visibility="gone"
+        android:textColor="@color/blue_button_fg"
+        android:background="@drawable/bg_button_blue"
+        android:padding="@dimen/button_padding"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
