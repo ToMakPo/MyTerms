@@ -98,8 +98,6 @@ public class Channel implements Parcelable {
     public void show(Context context, String title, String message, int callerID, Bundle bundle) {
         int code = getCode(callerID);
         ALARMS.remove(code);
-
-//        Log.d(TAG, " show:    " + Date.now().toSQL() + " - code: " + callerID);
         
         INTENT.putExtras(bundle);
         

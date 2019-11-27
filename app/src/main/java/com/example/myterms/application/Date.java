@@ -441,6 +441,9 @@ public class Date extends GregorianCalendar implements Parcelable {
         String output = getFormatted("%tY-%<tm-%<td %<tH:%<tM:%<tS:%<tN");
         return output.substring(0, 23);
     }
+    public long toLong() {
+        return getTimeInMillis();
+    }
     
     public static String getDateRangeDisplay(Date startDate, Date endDate) {
         String sDate = startDate.getFormatted("%tb %<te" + ((startDate.getYear() != endDate.getYear()) ? ", %<tY" : ""));

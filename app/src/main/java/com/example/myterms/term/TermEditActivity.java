@@ -17,12 +17,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myterms.R;
-import com.example.myterms.application.Codes;
 import com.example.myterms.application.Date;
 
+import static com.example.myterms.application.Codes.REQUEST_EDIT_TERM;
+import static com.example.myterms.application.Codes.RESULT_DELETED;
+import static com.example.myterms.application.Codes.RESULT_SAVED;
 import static com.example.myterms.application.MyFunctions.showToast;
 
-public class TermEditActivity extends AppCompatActivity implements Codes {
+public class TermEditActivity extends AppCompatActivity {
     private static final String TAG = "app: TermEditActivity";
     
     private boolean editing;
@@ -79,7 +81,7 @@ public class TermEditActivity extends AppCompatActivity implements Codes {
         //////////////////////
         titleErrorMessage = "";
         titleErrorIcon = findViewById(R.id.title_error_icon);
-        titleTextBox = findViewById(R.id.title_text_box);
+        titleTextBox = findViewById(R.id.title_textbox);
         titleTextBox.requestFocus();
         titleTextBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

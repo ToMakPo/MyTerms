@@ -9,6 +9,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.myterms.R;
 import com.example.myterms.application.App;
 import com.example.myterms.application.Date;
 import com.example.myterms.assessment.Assessment;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.example.myterms.application.App.HELPER;
+import static com.example.myterms.application.App.MAIN;
 import static com.example.myterms.notifications.Alarm.COURSE_END_CHANNEL;
 import static com.example.myterms.notifications.Alarm.COURSE_START_CHANNEL;
 
@@ -115,13 +117,7 @@ public class Course implements Comparable<Course>, Parcelable {
         return endAlarm;
     }
     public Status getStatus() {
-        if (status.equals(Status.DROPPED)) return Status.DROPPED;
-        
-        if (allAssessmentsCompleted()) return updateStatus(Status.COMPLETE);
-    
-        if (Date.today().isBefore(startDate)) return updateStatus(Status.PLAN_TO_TAKE);
-        
-        return updateStatus(Status.IN_PROGRESS);
+        return status;
     }
     public ArrayList<Mentor> getMentors() {
         Cursor data = HELPER.getData("CourseMentor", "WHERE course_id = " + id);
@@ -192,7 +188,7 @@ public class Course implements Comparable<Course>, Parcelable {
         updateStatus(Status.DROPPED);
     }
     public Status restore() {
-        if (allAssessmentsCompleted()) return updateStatus(Status.COMPLETE);
+        if (allAssessmentsCompleted()) return updateStatus(Status.COMPLETED);
     
         if (Date.today().isBefore(startDate)) return updateStatus(Status.PLAN_TO_TAKE);
     
@@ -249,7 +245,7 @@ public class Course implements Comparable<Course>, Parcelable {
                 ", credits=" + credits +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
-                ", status=" + status.name +
+                ", status=" + status.getName() +
                 '}';
     }
     public String getDateRangeDisplay() {
@@ -299,10 +295,10 @@ public class Course implements Comparable<Course>, Parcelable {
         Term term = Term.findByID(data.getInt(1));
         String title = data.getString(2);
         int credits = data.getInt(3);
-        Date startDate = Date.parseSQL(data.getString(4));
-        Date endDate = Date.parseSQL(data.getString(5));
-        Date startAlarm = Date.parseSQL(data.getString(6));
-        Date endAlarm = Date.parseSQL(data.getString(7));
+        Date startDate = Date.parseLong(data.getLong(4));
+        Date endDate = Date.parseLong(data.getLong(5));
+        Date startAlarm = Date.parseLong(data.getLong(6));
+        Date endAlarm = Date.parseLong(data.getLong(7));
         Status status = Status.get(data.getInt(8));
 
         return new Course(id, term, title, credits, startDate, endDate, startAlarm, endAlarm, status);
@@ -360,10 +356,10 @@ public class Course implements Comparable<Course>, Parcelable {
             values.put("term_id", term.getId());
             values.put("title", title);
             values.put("credits", credits);
-            values.put("start_date", startDate.toSQL());
-            values.put("end_date", endDate.toSQL());
-            values.put("start_alarm", startAlarm.toSQL());
-            values.put("end_alarm", endAlarm.toSQL());
+            values.put("start_date", startDate.toLong());
+            values.put("end_date", endDate.toLong());
+            values.put("start_alarm", startAlarm.toLong());
+            values.put("end_alarm", endAlarm.toLong());
             values.put("status", status.index);
 
             long id = HELPER.insert("Course", values);
@@ -410,14 +406,35 @@ public class Course implements Comparable<Course>, Parcelable {
     }
     public static ArrayList<Course> findAllByStatus(Term term, @NotNull Status ...statuses) {
         String indexes = "";
-
+        
         for (Status status : statuses) {
             if (!indexes.isEmpty()) indexes += ", ";
             indexes += status.index;
         }
-
+        
         String conditions = "WHERE term_id = " + term.getId() + "\nAND status IN (" + indexes + ")";
         return findAll(conditions);
+    }
+    public static ArrayList<Course> findAllByStatus(@NotNull Status ...statuses) {
+        String indexes = "";
+        
+        for (Status status : statuses) {
+            if (!indexes.isEmpty()) indexes += ", ";
+            indexes += status.index;
+        }
+        
+        String conditions = "WHERE status IN (" + indexes + ")";
+        return findAll(conditions);
+    }
+    public static ArrayList<Course> findAllUpcoming() {
+        long sLong = Date.today().toLong();
+        long eLong = Date.today().addDays(30).toLong();
+        
+        ArrayList<Course> list = findAll("WHERE start_date BETWEEN " + sLong + " AND " + eLong);
+    
+        list.removeIf(course -> !course.isActive());
+    
+        return list;
     }
     public static boolean titleIsUnique(Term term, String title) {
         if (term == null || title.isEmpty()) return true;
@@ -497,8 +514,8 @@ public class Course implements Comparable<Course>, Parcelable {
                 "SET term_id = " + term.getId() + ", \n" +
                 "\ttitle = '" + title + "', \n" +
                 "\tcredits = " + credits + ", \n" +
-                "\tstart_date = '" + startDate.toSQL() + "', \n" +
-                "\tend_date = '" + endDate.toSQL() + "', \n" +
+                "\tstart_date = '" + startDate.toLong() + "', \n" +
+                "\tend_date = '" + endDate.toLong() + "', \n" +
                 "\tstatus = " + status.index + "\n" +
                 "WHERE id = " + id + ";";
         HELPER.update(sql);
@@ -532,32 +549,26 @@ public class Course implements Comparable<Course>, Parcelable {
     
     public Course addAssessment(int type, String name, String description) {
         Assessment.create(this, type, name, description);
-        updateStatus(getStatus());
         return this;
     }
     public Course addAssessment(int type, String name, String description, boolean complete) {
         Assessment.create(this, type, name, description, complete);
-        updateStatus(getStatus());
         return this;
     }
     public Course addAssessment(int type, String name, String description, Date completionDate) {
         Assessment.create(this, type, name, description, completionDate);
-        updateStatus(getStatus());
         return this;
     }
     public Course addAssessment(int type, String name, String description, Date completionDate, boolean complete) {
         Assessment.create(this, type, name, description, completionDate, complete);
-        updateStatus(getStatus());
         return this;
     }
     public Course addAssessment(int type, String name, String description, Date completionDate, Date alarm) {
         Assessment.create(this, type, name, description, completionDate, alarm);
-        updateStatus(getStatus());
         return this;
     }
     public Course addAssessment(int type, String name, String description, Date completionDate, Date alarm, boolean complete) {
         Assessment.create(this, type, name, description, completionDate, alarm, complete);
-        updateStatus(getStatus());
         return this;
     }
     
@@ -574,35 +585,36 @@ public class Course implements Comparable<Course>, Parcelable {
     }
     
     public enum Status {
-        DROPPED ("Dropped", -1),
-        COMPLETE ("Complete", 0),
-        IN_PROGRESS ("In Progress", 1),
-        PLAN_TO_TAKE ("Plan to Take", 2);
+        DROPPED (R.string.status_dropped, -1),
+        COMPLETED (R.string.status_completed, 0),
+        IN_PROGRESS (R.string.status_in_progress, 1),
+        PLAN_TO_TAKE (R.string.status_plan_to_take, 2);
 
-        private String name;
+        private int id;
         private int index;
-
-        Status(String name, int index) {
-            this.name = name;
+    
+        Status(int id, int index) {
+            this.id = id;
             this.index = index;
         }
     
         @Override
         public String toString() {
-            return "Status: " + name;
+            return "Status: " + getName();
         }
 
         public String getName() {
-            return name;
+            return MAIN.getString(id);
         }
         public int getIndex() {
             return index;
         }
+        
 
         public static Status get(int index) {
             switch (index) {
                 case -1: return DROPPED;
-                case 0: return COMPLETE;
+                case 0: return COMPLETED;
                 case 1: return IN_PROGRESS;
                 case 2: return PLAN_TO_TAKE;
                 default: return null;

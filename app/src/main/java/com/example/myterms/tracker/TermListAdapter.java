@@ -1,4 +1,4 @@
-package com.example.myterms.term;
+package com.example.myterms.tracker;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,51 +10,51 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myterms.R;
+import com.example.myterms.term.Term;
 
 import java.util.ArrayList;
 
-public class TermSelectAdapter extends RecyclerView.Adapter<TermSelectAdapter.ViewHolder> {
+public class TermListAdapter extends RecyclerView.Adapter<TermListAdapter.ViewHolder> {
     private ArrayList<Term> terms;
-    private Term selectedTerm;
+    private ProgressTrackerActivity activity;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         private Term term;
-        private boolean selected;
-        
-        private View itemView;
+
         private TextView titleDisplay;
         private TextView dateDisplay;
         private TextView creditsDisplay;
         private ImageView passedIcon;
 
-        ViewHolder(@NonNull final View itemView, final TermSelectAdapter adapter) {
+        ViewHolder(@NonNull View itemView, final ProgressTrackerActivity activity) {
             super(itemView);
-            this.itemView = itemView;
-    
+
             titleDisplay = itemView.findViewById(R.id.title_display);
             dateDisplay = itemView.findViewById(R.id.date_display);
             creditsDisplay = itemView.findViewById(R.id.credits_display);
             passedIcon = itemView.findViewById(R.id.completed_icon);
 
-            itemView.setOnClickListener(view -> {
-                if (!selected) {
-                    adapter.selectedTerm = term;
-                    adapter.refresh();
-                }
-            });
+            itemView.setOnClickListener(view -> activity.viewTerm(term));
         }
     }
-    
-    TermSelectAdapter(Term selectedTerm) {
-        this.terms = Term.findAll();
-        this.selectedTerm = selectedTerm;
+
+    TermListAdapter(ProgressTrackerActivity activity) {
+        this.terms = Term.findAllUpcoming();
+        this.activity = activity;
+        
+        activity.upcomingTermRecycler.setAdapter(this);
+        
+        if (terms.isEmpty()) {
+            activity.upcomingTermLabel.setVisibility(View.GONE);
+            activity.upcomingTermRecycler.setVisibility(View.GONE);
+        }
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.component_term_card, parent, false);
-        return new ViewHolder(view, this);
+        return new ViewHolder(view, activity);
     }
 
     @Override
@@ -62,15 +62,13 @@ public class TermSelectAdapter extends RecyclerView.Adapter<TermSelectAdapter.Vi
         Term term = terms.get(position);
 
         holder.term = term;
-        holder.selected = selectedTerm.getId() == term.getId();
-        
-        holder.itemView.setSelected(holder.selected);
+
         holder.titleDisplay.setText(term.getTitle());
         holder.dateDisplay.setText(term.getDateRangeDisplay());
         holder.creditsDisplay.setText(term.getCreditsDisplay());
         holder.passedIcon.setVisibility(term.hasPassed() ? View.VISIBLE : View.GONE);
     }
-    
+
     @Override
     public int getItemCount() {
         return terms.size();
@@ -78,11 +76,16 @@ public class TermSelectAdapter extends RecyclerView.Adapter<TermSelectAdapter.Vi
 
     public void refresh() {
         terms.clear();
-        terms.addAll(Term.findAll());
+        terms.addAll(Term.findAllUpcoming());
+        
+        if (terms.isEmpty()) {
+            activity.upcomingTermLabel.setVisibility(View.GONE);
+            activity.upcomingTermRecycler.setVisibility(View.GONE);
+        } else {
+            activity.upcomingTermLabel.setVisibility(View.VISIBLE);
+            activity.upcomingTermRecycler.setVisibility(View.VISIBLE);
+        }
+        
         notifyDataSetChanged();
-    }
-    
-    Term getSelectedTerm() {
-        return selectedTerm;
     }
 }

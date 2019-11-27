@@ -14,13 +14,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myterms.R;
-import com.example.myterms.application.Codes;
 import com.example.myterms.course.Course;
 import com.example.myterms.course.CourseCardAdapter;
 import com.example.myterms.course.CourseEditActivity;
 import com.example.myterms.course.CourseViewActivity;
 
-public class TermViewActivity extends AppCompatActivity implements Codes {
+import static com.example.myterms.application.Codes.REQUEST_CREATE_COURSE;
+import static com.example.myterms.application.Codes.REQUEST_EDIT_COURSE;
+import static com.example.myterms.application.Codes.REQUEST_EDIT_TERM;
+import static com.example.myterms.application.Codes.REQUEST_VIEW_COURSE;
+import static com.example.myterms.application.Codes.RESULT_DELETED;
+import static com.example.myterms.application.Codes.RESULT_SAVED;
+
+public class TermViewActivity extends AppCompatActivity {
     private Term term;
 
     private TextView titleDisplay;
@@ -62,7 +68,7 @@ public class TermViewActivity extends AppCompatActivity implements Codes {
         dateDisplay.setText(term.getDateRangeDisplay());
         creditsDisplay = findViewById(R.id.credits_display);
         creditsDisplay.setText(term.getCreditsDisplay());
-        listToggle = findViewById(R.id.view_active_check_box);
+        listToggle = findViewById(R.id.view_active_checkbox);
 
         RecyclerView.LayoutManager courseLayoutManager = new LinearLayoutManager(this);
         courseCardAdapter = new CourseCardAdapter(this, term);

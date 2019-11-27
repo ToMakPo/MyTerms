@@ -66,6 +66,7 @@
     <string name="status_dropped">Dropped</string>
     <string name="change_status_to">Change status to:</string>
     <string name="complete">Complete</string>
+    <string name="completed">Completed</string>
     <string name="in_progress">In Progress</string>
     <string name="plan_to_take">Plan to Take</string>
     <string name="dropped">Dropped</string>
@@ -94,4 +95,18 @@
     <string name="options">Options</string>
     <string name="delete_this_assessment">Delete this assessment?</string>
     <string name="delete_this_note">Delete this note?</string>
+    <string name="please_select_the_course_status">Please select the course status:</string>
+    <string name="in_progress_">In Progress: </string>
+    <string name="plan_to_take_">Plan to Take: </string>
+    <string name="completed_">Completed: </string>
+    <string name="dropped_">Dropped: </string>
+    <string name="incomplete_">Incomplete: </string>
+    <string name="zero">0</string>
+    <string name="course_completion_display">You have completed 0.00% of your courses.</string>
+    <string name="assessment_completion_display">You have completed 0.00% of your assessments.</string>
+    <string name="complete_">Complete:</string>
+    <string name="upcoming_terms_">Upcoming Terms:</string>
+    <string name="upcoming_courses_">Upcoming Courses:</string>
+    <string name="upcoming_assessments_">Upcoming Assessments:</string>
+    <string name="current_term">Current Term</string>
 </resources>

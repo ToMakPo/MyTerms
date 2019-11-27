@@ -165,8 +165,8 @@ public class Term implements Comparable<Term>, Parcelable {
     public static Term parseSQL(Cursor data) {
         long id = data.getLong(0);
         String title = data.getString(1);
-        Date startDate = Date.parseSQL(data.getString(2));
-        Date endDate = Date.parseSQL(data.getString(3));
+        Date startDate = Date.parseLong(data.getLong(2));
+        Date endDate = Date.parseLong(data.getLong(3));
 
         return new Term(id, title, startDate, endDate);
     }
@@ -174,8 +174,8 @@ public class Term implements Comparable<Term>, Parcelable {
         ContentValues values = new ContentValues();
 
         values.put("title", title);
-        values.put("start_date", startDate.toSQL());
-        values.put("end_date", endDate.toSQL());
+        values.put("start_date", startDate.toLong());
+        values.put("end_date", endDate.toLong());
 
         long id = HELPER.insert("Term", values);
 
@@ -214,6 +214,16 @@ public class Term implements Comparable<Term>, Parcelable {
 
         return output;
     }
+    public static ArrayList<Term> findAllUpcoming() {
+        long sLong = Date.today().toLong();
+        long eLong = Date.today().addDays(30).toLong();
+        
+        ArrayList<Term> list = findAll("WHERE start_date BETWEEN " + sLong + " AND " + eLong);
+        
+        list.removeIf(term -> !term.isActive());
+        
+        return list;
+    }
 
     public static ArrayList<String> getTitles() {
         return getTitles(findAll());
@@ -251,8 +261,8 @@ public class Term implements Comparable<Term>, Parcelable {
 
         String sql = "UPDATE Term\n" +
                 "SET title = '" + title + "', \n" +
-                "\tstart_date = '" + startDate.toSQL() + "', \n" +
-                "\tend_date = '" + endDate.toSQL() + "'\n" +
+                "\tstart_date = '" + startDate.toLong() + "', \n" +
+                "\tend_date = '" + endDate.toLong() + "'\n" +
                 "WHERE id = " + id + ";";
         HELPER.update(sql);
     }

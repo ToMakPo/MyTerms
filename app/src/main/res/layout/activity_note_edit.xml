@@ -17,7 +17,7 @@
 
     <!-- Course -->
     <RelativeLayout
-        android:id="@+id/course_box"
+        android:id="@+id/course_group"
         android:background="@drawable/bg_form_info"
         android:layout_margin="@dimen/form_info_margin"
         android:layout_below="@id/header"
@@ -43,10 +43,10 @@
 
     <!-- Message -->
     <RelativeLayout
-        android:id="@+id/message_box"
+        android:id="@+id/message_group"
         android:background="@drawable/bg_form_info"
         android:layout_margin="@dimen/form_info_margin"
-        android:layout_below="@id/course_box"
+        android:layout_below="@id/course_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content" />
 
         <EditText
-            android:id="@+id/message_text_box"
+            android:id="@+id/message_textbox"
             android:inputType="textMultiLine"
             android:background="@android:color/transparent"
             android:textSize="@dimen/form_info_text_size"

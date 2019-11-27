@@ -14,8 +14,8 @@ import static com.example.myterms.assessment.Assessment.TYPE_PERFORMANCE;
 public class App extends Application {
     public static Context MAIN;
     
-    private static final boolean DEBUG = false;
-    public static boolean BUILD_DB = false;
+    private static final boolean DEBUG = true;
+    public static boolean BUILD_DB = true;
     public static Database HELPER;
     
     @Override

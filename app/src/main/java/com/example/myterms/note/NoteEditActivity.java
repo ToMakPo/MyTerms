@@ -13,12 +13,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myterms.R;
-import com.example.myterms.application.Codes;
 import com.example.myterms.course.Course;
 
+import static com.example.myterms.application.Codes.REQUEST_EDIT_NOTE;
+import static com.example.myterms.application.Codes.RESULT_DELETED;
+import static com.example.myterms.application.Codes.RESULT_SAVED;
 import static com.example.myterms.application.MyFunctions.showToast;
 
-public class NoteEditActivity extends AppCompatActivity implements Codes {
+public class NoteEditActivity extends AppCompatActivity {
     private boolean editing;
     private Note note;
 
@@ -71,7 +73,7 @@ public class NoteEditActivity extends AppCompatActivity implements Codes {
         ///////////////////////////
         messageErrorMessage = "";
         messageErrorIcon = findViewById(R.id.message_error_icon);
-        messageTextBox = findViewById(R.id.message_text_box);
+        messageTextBox = findViewById(R.id.message_textbox);
         messageTextBox.requestFocus();
         messageTextBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

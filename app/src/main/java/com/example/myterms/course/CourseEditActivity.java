@@ -7,18 +7,16 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myterms.R;
-import com.example.myterms.application.Codes;
 import com.example.myterms.application.Date;
 import com.example.myterms.mentor.Mentor;
 import com.example.myterms.mentor.MentorSelectActivity;
@@ -27,10 +25,19 @@ import com.example.myterms.term.TermSelectActivity;
 
 import java.util.ArrayList;
 
+import static com.example.myterms.application.Codes.REQUEST_EDIT_COURSE;
+import static com.example.myterms.application.Codes.REQUEST_SELECT_MENTOR;
+import static com.example.myterms.application.Codes.REQUEST_SELECT_TERM;
+import static com.example.myterms.application.Codes.RESULT_CONFIRMED;
+import static com.example.myterms.application.Codes.RESULT_SAVED;
 import static com.example.myterms.application.MyFunctions.showToast;
 import static com.example.myterms.course.Course.Status;
+import static com.example.myterms.course.Course.Status.COMPLETED;
+import static com.example.myterms.course.Course.Status.DROPPED;
+import static com.example.myterms.course.Course.Status.IN_PROGRESS;
+import static com.example.myterms.course.Course.Status.PLAN_TO_TAKE;
 
-public class CourseEditActivity extends AppCompatActivity implements Codes {
+public class CourseEditActivity extends AppCompatActivity {
     private boolean editing;
     private Course course;
     
@@ -76,11 +83,11 @@ public class CourseEditActivity extends AppCompatActivity implements Codes {
 
     private Status status;
     private TextView statusDisplay;
+    private String statusErrorMessage;
+    private ImageView statusErrorIcon;
     
-    private Button dropButton;
-    private Button restoreButton;
-    private Button saveButton;
-
+    private RelativeLayout selectStatusPopup;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,132 +113,128 @@ public class CourseEditActivity extends AppCompatActivity implements Codes {
         actionBar.setTitle("Course " + (editing ? "Editor" : "Creator"));
         actionBar.setDisplayHomeAsUpEnabled(true);
     
-        //////////////////////
-        ///      TERM      ///
-        //////////////////////
+        ///////////////////////////////
+        ///          TERM           ///
+        ///////////////////////////////
         termErrorMessage = "";
-        termDisplay = findViewById(R.id.terms_display);
+        termDisplay = findViewById(R.id.term_display);
         termErrorIcon = findViewById(R.id.term_error_icon);
-        termDisplay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    selectTerm(view);
-                }
+        termDisplay.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
+                selectTerm(view);
             }
         });
         
-        //////////////////////
-        ///     TITLE      ///
-        //////////////////////
+        ///////////////////////////////
+        ///          TITLE          ///
+        ///////////////////////////////
         titleErrorMessage = "";
         titleErrorIcon = findViewById(R.id.title_error_icon);
-        titleTextBox = findViewById(R.id.title_text_box);
+        titleTextBox = findViewById(R.id.title_textbox);
         titleTextBox.requestFocus();
-        titleTextBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-            if (!hasFocus) {
-                if (title.isEmpty()) {
-                    title = titleTextBox.getText().toString();
-        
-                    if (titleErrorIcon.getVisibility() == View.VISIBLE) {
-                        if (checkTitleExists() && checkTitleIsUnique()) {
-                            titleErrorIcon.setVisibility(View.GONE);
-                        }
-                    } else {
-                        if (!checkTitleIsUnique()) {
-                            titleErrorIcon.setVisibility(View.VISIBLE);
-                        }
+        titleTextBox.setOnFocusChangeListener((v, hasFocus) -> {
+        if (!hasFocus) {
+            if (title.isEmpty()) {
+                title = titleTextBox.getText().toString();
+    
+                if (titleErrorIcon.getVisibility() == View.VISIBLE) {
+                    if (checkTitleExists() && checkTitleIsUnique()) {
+                        titleErrorIcon.setVisibility(View.GONE);
                     }
                 } else {
-                    title = titleTextBox.getText().toString();
-        
-                    titleErrorIcon.setVisibility(checkTitleIsUnique() ? View.GONE : View.VISIBLE);
+                    if (!checkTitleIsUnique()) {
+                        titleErrorIcon.setVisibility(View.VISIBLE);
+                    }
                 }
+            } else {
+                title = titleTextBox.getText().toString();
+    
+                titleErrorIcon.setVisibility(checkTitleIsUnique() ? View.GONE : View.VISIBLE);
             }
-            }
+        }
         });
     
-        //////////////////////
-        ///    MENTORS     ///
-        //////////////////////
+        ///////////////////////////////
+        ///         MENTORS         ///
+        ///////////////////////////////
         mentorsErrorMessage = "";
         mentorDisplay = findViewById(R.id.mentors_display);
         mentorsErrorIcon = findViewById(R.id.mentors_error_icon);
-        mentorDisplay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    selectMentors(view);
-                }
+        mentorDisplay.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
+                selectMentors(view);
             }
         });
     
-        //////////////////////
-        ///    CREDITS     ///
-        //////////////////////
+        ///////////////////////////////
+        ///         CREDITS         ///
+        ///////////////////////////////
         creditsErrorMessage = "";
         creditsErrorIcon = findViewById(R.id.credits_error_icon);
-        creditsTextBox = findViewById(R.id.credits_text_box);
-        creditsTextBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    String credString = creditsTextBox.getText().toString();
-                    if (!credString.isEmpty())
-                        credits = Integer.parseInt(credString);
-                    else
-                        credits = -1;
-    
-                    if (creditsErrorIcon.getVisibility() == View.VISIBLE)
-                        creditsErrorIcon.setVisibility(checkCreditsExists() ? View.GONE : View.VISIBLE);
-                }
+        creditsTextBox = findViewById(R.id.credits_textbox);
+        creditsTextBox.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String credString = creditsTextBox.getText().toString();
+                if (!credString.isEmpty())
+                    credits = Integer.parseInt(credString);
+                else
+                    credits = -1;
+
+                if (creditsErrorIcon.getVisibility() == View.VISIBLE)
+                    creditsErrorIcon.setVisibility(checkCreditsExists() ? View.GONE : View.VISIBLE);
             }
         });
     
-        //////////////////////
-        ///   START DATE   ///
-        //////////////////////
+        ///////////////////////////////
+        ///       START DATE        ///
+        ///////////////////////////////
         startDateErrorMessage = "";
         startDateDisplay = findViewById(R.id.start_date_display);
         startDateErrorIcon = findViewById(R.id.start_date_error_icon);
-        startDateDisplay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    selectStartDate(view);
-                }
+        startDateDisplay.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
+                selectStartDate(view);
             }
         });
         startAlarmDisplay = findViewById(R.id.start_alarm_display);
     
-        //////////////////////
-        ///    END DATE    ///
-        //////////////////////
+        ///////////////////////////////
+        ///        END DATE         ///
+        ///////////////////////////////
         endDateErrorMessage = "";
         endDateDisplay = findViewById(R.id.end_date_display);
         endDateErrorIcon = findViewById(R.id.end_date_error_icon);
-        endDateDisplay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    selectEndDate(view);
-                }
+        endDateDisplay.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
+                selectEndDate(view);
             }
         });
         endAlarmDisplay = findViewById(R.id.end_alarm_display);
     
-        //////////////////////
-        ///     STATUS     ///
-        //////////////////////
+        ///////////////////////////////
+        ///         STATUS          ///
+        ///////////////////////////////
+        statusErrorMessage = "";
         statusDisplay = findViewById(R.id.status_display);
+        statusErrorIcon = findViewById(R.id.status_error_icon);
+        statusDisplay.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
+                selectStatus();
+            }
+        });
     
-        //////////////////////
-        ///    BUTTONS     ///
-        //////////////////////
-        dropButton = findViewById(R.id.drop_button);
-        restoreButton = findViewById(R.id.restore_button);
+        ///////////////////////////////
+        ///   SELECT STATUS POPUP   ///
+        ///////////////////////////////
+        selectStatusPopup = findViewById(R.id.change_status_popup);
+        Button planToTakeButton = findViewById(R.id.status_plan_to_take_button);
+        planToTakeButton.setOnClickListener(view -> setStatus(PLAN_TO_TAKE));
+        Button inProgressButton = findViewById(R.id.status_in_progress_button);
+        inProgressButton.setOnClickListener(view -> setStatus(IN_PROGRESS));
+        Button completedButton = findViewById(R.id.status_completed_button);
+        completedButton.setOnClickListener(view -> setStatus(COMPLETED));
+        Button droppedButton = findViewById(R.id.status_dropped_button);
+        droppedButton.setOnClickListener(view -> setStatus(DROPPED));
         
         if (editing) {
             ((TextView) findViewById(R.id.header)).setText(R.string.edit_course);
@@ -261,12 +264,6 @@ public class CourseEditActivity extends AppCompatActivity implements Codes {
 
             status = course.getStatus();
             statusDisplay.setText(status.getName());
-            
-            if (course.getStatus().equals(Status.DROPPED))
-                restoreButton.setVisibility(View.VISIBLE);
-            else
-                dropButton.setVisibility(View.VISIBLE);
-            
         } else {
             course = null;
 
@@ -286,59 +283,30 @@ public class CourseEditActivity extends AppCompatActivity implements Codes {
     
             endDate = term.getEndDate();
             endAlarm = Date.of(endDate).setTime(9, 0);
+            
+            status = PLAN_TO_TAKE;
+            statusDisplay.setText(status.getName());
         }
     
-        setStatus();
-    
         startDateDialog = new DatePickerDialog(this,
-            new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int day) {
-                    setStartDate(Date.of(year, month + 1, day));
-                }
-            }, startDate.getYear(), startDate.getMonth() - 1, startDate.getDay());
+                (view, year, month, day) -> setStartDate(Date.of(year, month + 1, day)), startDate.getYear(), startDate.getMonth() - 1, startDate.getDay());
         startDateDialog.setTitle("Select Start Date");
         updateStartAlarmDisplay();
-        startAlarmDateDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                tempStartAlarm = Date.of(year, month + 1, day);
-                startAlarmTimeDialog.show();
-            }
+        startAlarmDateDialog = new DatePickerDialog(this, (view, year, month, day) -> {
+            tempStartAlarm = Date.of(year, month + 1, day);
+            startAlarmTimeDialog.show();
         }, startAlarm.getYear(), startAlarm.getMonth() - 1, startAlarm.getDay());
-        startAlarmTimeDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                setStartAlarm(hourOfDay, minute);
-            }
-        }, startAlarm.getHour(), startAlarm.getMinte(), true);
-    
+        startAlarmTimeDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> setStartAlarm(hourOfDay, minute), startAlarm.getHour(), startAlarm.getMinte(), true);
     
         endDateDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int day) {
-                        setEndDate(Date.of(year, month + 1, day));
-                    }
-                }, endDate.getYear(), endDate.getMonth() - 1, endDate.getDay());
+                (view, year, month, day) -> setEndDate(Date.of(year, month + 1, day)), endDate.getYear(), endDate.getMonth() - 1, endDate.getDay());
         endDateDialog.setTitle("Select End Date");
         updateEndAlarmDisplay();
-        endAlarmDateDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                tempEndAlarm = Date.of(year, month + 1, day);
-                endAlarmTimeDialog.show();
-            }
+        endAlarmDateDialog = new DatePickerDialog(this, (view, year, month, day) -> {
+            tempEndAlarm = Date.of(year, month + 1, day);
+            endAlarmTimeDialog.show();
         }, endAlarm.getYear(), endAlarm.getMonth() - 1, endAlarm.getDay());
-        endAlarmTimeDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                setEndAlarm(hourOfDay, minute);
-            }
-        }, endAlarm.getHour(), endAlarm.getMinte(), true);
-    
-    
-        saveButton = findViewById(R.id.save_button);
+        endAlarmTimeDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> setEndAlarm(hourOfDay, minute), endAlarm.getHour(), endAlarm.getMinte(), true);
     }
 
     public void selectTerm(View view) {
@@ -390,8 +358,6 @@ public class CourseEditActivity extends AppCompatActivity implements Codes {
         
         if (endDateDisplay.getText().length() > 0)
             endDateErrorIcon.setVisibility(checkEndDateIsAfterStartDate() ? View.GONE : View.VISIBLE);
-        
-        setStatus();
     
         startAlarm = Date.of(startDate).addMilliseconds(delta);
         updateStartAlarmDisplay();
@@ -428,8 +394,6 @@ public class CourseEditActivity extends AppCompatActivity implements Codes {
         if (endDateErrorIcon.getVisibility() != View.VISIBLE && endDateDisplay.getText().length() > 0)
             endDateErrorIcon.setVisibility(checkEndDateIsInTerm() ? View.GONE : View.VISIBLE);
         
-        setStatus();
-    
         endAlarm = Date.of(endDate).addMilliseconds(delta);
         updateEndAlarmDisplay();
     
@@ -451,16 +415,17 @@ public class CourseEditActivity extends AppCompatActivity implements Codes {
         display.setText(date.getDateDisplay());
     }
     
-    public void setStatus() {
-        Date today = Date.today();
-        
-        if (course != null) status = course.getStatus();
-        
-        else if (startDate == null || today.isBefore(startDate)) status = Status.PLAN_TO_TAKE;
-        
-        else status = Status.IN_PROGRESS;
+    public void selectStatus() {
+        selectStatusPopup.setVisibility(View.VISIBLE);
+    }
+    public void setStatus(Status status) {
+        this.status = status;
         
         statusDisplay.setText(status.getName());
+        
+        statusErrorIcon.setVisibility(View.GONE);
+        
+        selectStatusPopup.setVisibility(View.GONE);
     }
     
     private boolean checkTermExists() {
@@ -589,6 +554,9 @@ public class CourseEditActivity extends AppCompatActivity implements Codes {
     public void showEndDateErrorMessage(View view) {
         showToast(this, endDateErrorMessage);
     }
+    public void showStatusErrorMessage(View view) {
+        showToast(this, statusErrorMessage);
+    }
 
     public void saveCourse(View view) {
         if (checkInputs()) {
@@ -602,26 +570,6 @@ public class CourseEditActivity extends AppCompatActivity implements Codes {
             setResult(RESULT_SAVED, intent);
             close(view);
         }
-    }
-    public void dropCourse(View view) {
-        course.drop();
-        
-        status = Status.DROPPED;
-        statusDisplay.setText(status.getName());
-        restoreButton.setVisibility(View.VISIBLE);
-        dropButton.setVisibility(View.GONE);
-        
-        Intent intent = new Intent();
-        intent.putExtra("course", course);
-        setResult(RESULT_DROPPED, intent);
-        close(view);
-    }
-    public void restoreCourse(View view) {
-        status = course.restore();
-        statusDisplay.setText(status.getName());
-        restoreButton.setVisibility(View.GONE);
-        dropButton.setVisibility(View.VISIBLE);
-        saveCourse(view);
     }
     public void close(View view) {
         finish();
@@ -658,8 +606,6 @@ public class CourseEditActivity extends AppCompatActivity implements Codes {
                         endDateDialog.updateDate(endDate.getYear(), endDate.getMonth(), endDate.getDay());
                         endDateErrorIcon.setVisibility(View.VISIBLE);
                     }
-                    
-                    setStatus();
                 }
             }
             
@@ -672,7 +618,7 @@ public class CourseEditActivity extends AppCompatActivity implements Codes {
                 
                 mentors = ids != null
                         ? Mentor.findAllByIDs(ids)
-                        : new ArrayList<Mentor>();
+                        : new ArrayList<>();
                 
                 mentorDisplay.setText(getMentorDisplay());
                 

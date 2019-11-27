@@ -57,7 +57,7 @@
             android:layout_height="wrap_content" />
 
         <CheckBox
-            android:id="@+id/view_active_check_box"
+            android:id="@+id/view_active_checkbox"
             android:text="@string/view_active"
             android:textSize="@dimen/label_text_size"
             android:button="@null"

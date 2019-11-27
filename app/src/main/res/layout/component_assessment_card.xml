@@ -11,34 +11,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/completed_icon"
-            android:src="@drawable/ic_complete"
-            android:visibility="gone"
-            android:contentDescription="@string/complete"
+        <LinearLayout
+            android:id="@+id/icon_group"
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/not_complete_icon"
-            android:src="@drawable/ic_not_complete"
-            android:contentDescription="@string/not_complete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/completed_icon"
+                android:src="@drawable/ic_complete"
+                android:visibility="gone"
+                android:contentDescription="@string/complete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/incomplete_icon"
+                android:src="@drawable/ic_not_complete"
+                android:contentDescription="@string/not_complete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/name_display"
             android:text="@string/performance_name"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_marginStart="30dp"
+            android:layout_toEndOf="@+id/icon_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/completion_date_display"
             android:text="@string/completion_date"
-            android:layout_marginStart="30dp"
+            android:layout_toEndOf="@+id/icon_group"
             android:layout_below="@id/name_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -46,23 +54,13 @@
         <TextView
             android:id="@+id/description_display"
             android:text="@string/lorem_ipsum"
-            android:layout_marginStart="30dp"
+            android:layout_toEndOf="@+id/icon_group"
             android:layout_below="@id/completion_date_display"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <ImageButton
-            android:id="@+id/options_button"
-            android:contentDescription="@string/options"
-            android:visibility="gone"
-            android:src="@drawable/ic_options"
-            android:background="@android:color/transparent"
-            android:layout_alignParentEnd="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
         <LinearLayout
-            android:id="@+id/options_box"
+            android:id="@+id/options_group"
             android:orientation="horizontal"
             android:visibility="gone"
             android:gravity="end"
@@ -98,7 +96,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/confirm_delete_message_box"
+        android:id="@+id/confirm_delete_message_popup"
         android:background="@android:drawable/screen_background_dark_transparent"
         android:clickable="true"
         android:visibility="gone"

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myterms.R;
-import com.example.myterms.application.Codes;
 import com.example.myterms.assessment.Assessment;
 import com.example.myterms.assessment.AssessmentCardAdapter;
 import com.example.myterms.assessment.AssessmentEditActivity;
@@ -27,10 +26,26 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.ArrayList;
 
+import static com.example.myterms.application.Codes.REQUEST_CREATE_NOTE;
+import static com.example.myterms.application.Codes.REQUEST_CREATE_OBJECTIVE;
+import static com.example.myterms.application.Codes.REQUEST_CREATE_PERFORMANCE;
+import static com.example.myterms.application.Codes.REQUEST_EDIT_COURSE;
+import static com.example.myterms.application.Codes.REQUEST_EDIT_NOTE;
+import static com.example.myterms.application.Codes.REQUEST_EDIT_OBJECTIVE;
+import static com.example.myterms.application.Codes.REQUEST_EDIT_PERFORMANCE;
+import static com.example.myterms.application.Codes.RESULT_DELETED;
+import static com.example.myterms.application.Codes.RESULT_DROPPED;
+import static com.example.myterms.application.Codes.RESULT_SAVED;
 import static com.example.myterms.assessment.Assessment.TYPE_OBJECTIVE;
 import static com.example.myterms.assessment.Assessment.TYPE_PERFORMANCE;
+import static com.example.myterms.course.Course.Status;
+import static com.example.myterms.course.Course.Status.COMPLETED;
+import static com.example.myterms.course.Course.Status.DROPPED;
+import static com.example.myterms.course.Course.Status.IN_PROGRESS;
+import static com.example.myterms.course.Course.Status.PLAN_TO_TAKE;
+import static com.example.myterms.course.Course.Status.get;
 
-public class CourseViewActivity extends AppCompatActivity implements Codes {
+public class CourseViewActivity extends AppCompatActivity {
     private static final String TAG = "app: CVActivity";
     
     private Course course;
@@ -141,10 +156,11 @@ public class CourseViewActivity extends AppCompatActivity implements Codes {
         updateIcon();
     }
     public void updateIcon() {
-        statusCompleteIcon.setVisibility(course.getStatus() == Course.Status.COMPLETE ? View.VISIBLE : View.GONE);
-        statusInProgressIcon.setVisibility(course.getStatus() == Course.Status.IN_PROGRESS ? View.VISIBLE : View.GONE);
-        statusPlanToTakeIcon.setVisibility(course.getStatus() == Course.Status.PLAN_TO_TAKE ? View.VISIBLE : View.GONE);
-        statusDroppedIcon.setVisibility(course.getStatus() == Course.Status.DROPPED ? View.VISIBLE : View.GONE);
+        Status status = course.getStatus();
+        statusCompleteIcon.setVisibility(status == COMPLETED ? View.VISIBLE : View.GONE);
+        statusInProgressIcon.setVisibility(status == IN_PROGRESS ? View.VISIBLE : View.GONE);
+        statusPlanToTakeIcon.setVisibility(status == PLAN_TO_TAKE ? View.VISIBLE : View.GONE);
+        statusDroppedIcon.setVisibility(status == DROPPED ? View.VISIBLE : View.GONE);
     }
 
     public void editCourse(View view) {
@@ -234,7 +250,7 @@ public class CourseViewActivity extends AppCompatActivity implements Codes {
     public void confirmStatus(View view) {
         changeStatusPopup.setVisibility(View.GONE);
 
-        Course.Status status = Course.Status.get(Integer.parseInt((String)view.getTag()));
+        Course.Status status = get(Integer.parseInt((String)view.getTag()));
 
         course.updateStatus(status);
 

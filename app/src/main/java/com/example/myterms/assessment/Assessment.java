@@ -145,8 +145,8 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         int type = data.getInt(2);
         String name = data.getString(3);
         String description = data.getString(4);
-        Date completionDate = Date.parseSQL(data.getString(5));
-        Date alarm = Date.parseSQL(data.getString(6));
+        Date completionDate = Date.parseLong(data.getLong(5));
+        Date alarm = Date.parseLong(data.getLong(6));
         boolean complete = data.getInt(7) == 1;
 
         return new Assessment(id, course, type, name, description, completionDate, alarm, complete);
@@ -173,8 +173,8 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         values.put("type", type);
         values.put("name", name);
         values.put("description", description);
-        values.put("completion_date", completionDate.toSQL());
-        values.put("alarm", alarm.toSQL());
+        values.put("completion_date", completionDate.toLong());
+        values.put("alarm", alarm.toLong());
         values.put("complete", complete ? 1 : 0);
         
         long id = HELPER.insert("Assessment", values);
@@ -224,6 +224,14 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
     public static ArrayList<Assessment> findAllByCourse(Course course) {
         return findAll("WHERE course_id = " + course.getId());
     }
+    public static ArrayList<Assessment> findAllUpcoming() {
+        long sLong = Date.today().toLong();
+        long eLong = Date.today().addDays(30).toLong();
+    
+        ArrayList<Assessment> list = findAll("WHERE complete = 0\nAND completion_date BETWEEN " + sLong + " AND " + eLong);
+    
+        return list;
+    }
     public static Assessment findByID(long id) {
         ArrayList<Assessment> list = findAll("WHERE id = " + id);
 
@@ -247,8 +255,8 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         String sql = "UPDATE Assessment\n" +
                 "SET name = '" + name + "', \n" +
                 "\tdescription = '" + description + "', \n" +
-                "\tcompletion_date = '" + completionDate.toSQL() + "', \n" +
-                "\talarm = '" + alarm.toSQL() + "', \n" +
+                "\tcompletion_date = '" + completionDate.toLong() + "', \n" +
+                "\talarm = '" + alarm.toLong() + "', \n" +
                 "\tcomplete = " + (complete ? 1 : 0) + "\n" +
                 "WHERE id = " + id + ";";
         HELPER.update(sql);
@@ -264,7 +272,7 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         HELPER.update(sql);
         cancelAlarm();
     }
-    public void markAsNotComplete() {
+    public void markAsIncomplete() {
         complete = false;
         String sql = "UPDATE Assessment\n" +
                 "SET complete = 0\n" +

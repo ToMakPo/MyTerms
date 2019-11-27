@@ -17,7 +17,7 @@
 
     <!-- Course -->
     <RelativeLayout
-        android:id="@+id/course_box"
+        android:id="@+id/course_group"
         android:background="@drawable/bg_form_info"
         android:layout_margin="@dimen/form_info_margin"
         android:layout_below="@id/header"
@@ -43,10 +43,10 @@
 
     <!-- Name -->
     <RelativeLayout
-        android:id="@+id/name_box"
+        android:id="@+id/name_group"
         android:background="@drawable/bg_form_info"
         android:layout_margin="@dimen/form_info_margin"
-        android:layout_below="@id/course_box"
+        android:layout_below="@id/course_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content" />
 
         <EditText
-            android:id="@+id/name_text_box"
+            android:id="@+id/name_textbox"
             android:inputType="text"
             android:background="@android:color/transparent"
             android:textSize="@dimen/form_info_text_size"
@@ -83,10 +83,10 @@
 
     <!-- Description -->
     <RelativeLayout
-        android:id="@+id/description_box"
+        android:id="@+id/description_group"
         android:background="@drawable/bg_form_info"
         android:layout_margin="@dimen/form_info_margin"
-        android:layout_below="@id/name_box"
+        android:layout_below="@id/name_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -98,7 +98,7 @@
             android:layout_height="wrap_content" />
 
         <EditText
-            android:id="@+id/description_text_box"
+            android:id="@+id/description_textbox"
             android:inputType="textMultiLine"
             android:background="@android:color/transparent"
             android:textSize="@dimen/form_info_text_size"
@@ -110,7 +110,6 @@
             android:id="@+id/description_error_icon"
             android:contentDescription="@string/error"
             android:src="@drawable/ic_error"
-            android:onClick="showDescriptionErrorMessage"
             android:visibility="gone"
             android:background="@android:color/transparent"
             android:layout_marginTop="9dp"
@@ -123,10 +122,10 @@
 
     <!-- Completion Date -->
     <RelativeLayout
-        android:id="@+id/completion_date_box"
+        android:id="@+id/completion_date_group"
         android:background="@drawable/bg_form_info"
         android:layout_margin="@dimen/form_info_margin"
-        android:layout_below="@id/description_box"
+        android:layout_below="@id/description_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -144,7 +143,7 @@
             android:focusable="true"
             android:onClick="selectCompletionDate"
             android:layout_alignParentStart="true"
-            android:layout_toStartOf="@id/complete_check_box"
+            android:layout_toStartOf="@id/complete_checkbox"
             android:layout_below="@+id/completion_date_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -159,12 +158,12 @@
             android:layout_marginTop="9dp"
             android:layout_marginEnd="10dp"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/complete_check_box"
+            android:layout_toStartOf="@id/complete_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <CheckBox
-            android:id="@+id/complete_check_box"
+            android:id="@+id/complete_checkbox"
             android:text="@string/complete"
             android:button="@null"
             android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
@@ -179,7 +178,7 @@
 
     <!-- Alarm -->
     <RelativeLayout
-        android:id="@+id/alarm_start_box"
+        android:id="@+id/alarm_start_group"
         android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"
         android:onClick="selectAlarmDate"

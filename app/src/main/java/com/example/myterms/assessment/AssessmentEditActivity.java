@@ -8,32 +8,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myterms.R;
-import com.example.myterms.application.Codes;
 import com.example.myterms.application.Date;
 import com.example.myterms.course.Course;
 import com.example.myterms.course.CourseViewActivity;
 
+import static com.example.myterms.application.Codes.RESULT_DELETED;
+import static com.example.myterms.application.Codes.RESULT_SAVED;
 import static com.example.myterms.application.MyFunctions.showToast;
 import static com.example.myterms.assessment.Assessment.TYPE_OBJECTIVE;
 
-public class AssessmentEditActivity extends AppCompatActivity implements Codes {
+public class AssessmentEditActivity extends AppCompatActivity {
     private boolean editing;
     private Assessment assessment;
 
     private int type;
     private Course course;
-    private TextView courseDisplay;
     
     private String name;
     private String nameErrorMessage;
@@ -41,9 +38,7 @@ public class AssessmentEditActivity extends AppCompatActivity implements Codes {
     private ImageView nameErrorIcon;
     
     private String description;
-    private String descriptionErrorMessage;
     private TextView descriptionTextBox;
-    private ImageView descriptionErrorIcon;
     
     private Date completionDate;
     private String completionDateErrorMessage;
@@ -52,7 +47,6 @@ public class AssessmentEditActivity extends AppCompatActivity implements Codes {
     private DatePickerDialog completionDateDialog;
     
     private boolean complete;
-    private CheckBox completeCheckBox;
     
     private TextView alarmDisplay;
     private DatePickerDialog alarmDateDialog;
@@ -60,7 +54,6 @@ public class AssessmentEditActivity extends AppCompatActivity implements Codes {
     private Date alarm;
     
     private Button saveButton;
-    private Button deleteButton;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +86,7 @@ public class AssessmentEditActivity extends AppCompatActivity implements Codes {
         ///////////////////////////
         course = received.getParcelableExtra("course");
         if (course == null) throw new RuntimeException("Could not get course from received.");
-        courseDisplay = findViewById(R.id.course_display);
+        TextView courseDisplay = findViewById(R.id.course_display);
         courseDisplay.setText(course.getTitle());
     
         ///////////////////////////
@@ -101,29 +94,26 @@ public class AssessmentEditActivity extends AppCompatActivity implements Codes {
         ///////////////////////////
         nameErrorMessage = "";
         nameErrorIcon = findViewById(R.id.name_error_icon);
-        nameTextBox = findViewById(R.id.name_text_box);
+        nameTextBox = findViewById(R.id.name_textbox);
         nameTextBox.requestFocus();
-        nameTextBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (name.isEmpty()) {
-                        name = nameTextBox.getText().toString();
-                    
-                        if (nameErrorIcon.getVisibility() == View.VISIBLE) {
-                            if (checkNameExists() && checkNameIsUnique()) {
-                                nameErrorIcon.setVisibility(View.GONE);
-                            }
-                        } else {
-                            if (!checkNameIsUnique()) {
-                                nameErrorIcon.setVisibility(View.VISIBLE);
-                            }
+        nameTextBox.setOnFocusChangeListener((view, hasFocus) -> {
+            if (!hasFocus) {
+                if (name.isEmpty()) {
+                    name = nameTextBox.getText().toString();
+                
+                    if (nameErrorIcon.getVisibility() == View.VISIBLE) {
+                        if (checkNameExists() && checkNameIsUnique()) {
+                            nameErrorIcon.setVisibility(View.GONE);
                         }
                     } else {
-                        name = nameTextBox.getText().toString();
-                    
-                        nameErrorIcon.setVisibility(checkNameIsUnique() ? View.GONE : View.VISIBLE);
+                        if (!checkNameIsUnique()) {
+                            nameErrorIcon.setVisibility(View.VISIBLE);
+                        }
                     }
+                } else {
+                    name = nameTextBox.getText().toString();
+                
+                    nameErrorIcon.setVisibility(checkNameIsUnique() ? View.GONE : View.VISIBLE);
                 }
             }
         });
@@ -131,22 +121,11 @@ public class AssessmentEditActivity extends AppCompatActivity implements Codes {
         ///////////////////////////
         ///     DESCRIPTION     ///
         ///////////////////////////
-        descriptionErrorMessage = "";
-        descriptionErrorIcon = findViewById(R.id.description_error_icon);
-        descriptionTextBox = findViewById(R.id.description_text_box);
-        descriptionTextBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (description.isEmpty()) {
-                        description = descriptionTextBox.getText().toString();
-                    
-                        if (description.isEmpty()
-                                && descriptionErrorIcon.getVisibility() == View.VISIBLE
-                                && checkDescriptionExists()) {
-                            descriptionErrorIcon.setVisibility(View.GONE);
-                        }
-                    }
+        descriptionTextBox = findViewById(R.id.description_textbox);
+        descriptionTextBox.setOnFocusChangeListener((view, hasFocus) -> {
+            if (!hasFocus) {
+                if (description.isEmpty()) {
+                    description = descriptionTextBox.getText().toString();
                 }
             }
         });
@@ -157,22 +136,14 @@ public class AssessmentEditActivity extends AppCompatActivity implements Codes {
         completionDateErrorMessage = "";
         completionDateDisplay = findViewById(R.id.completion_date_display);
         completionDateErrorIcon = findViewById(R.id.completion_date_error_icon);
-        completionDateDisplay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    selectCompletionDate(view);
-                }
+        completionDateDisplay.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
+                selectCompletionDate(view);
             }
         });
-        
-        completeCheckBox = findViewById(R.id.complete_check_box);
-        completeCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                complete = isChecked;
-            }
-        });
+    
+        CheckBox completeCheckBox = findViewById(R.id.complete_checkbox);
+        completeCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> complete = isChecked);
     
         ///////////////////////////
         ///        ALARM        ///
@@ -183,7 +154,7 @@ public class AssessmentEditActivity extends AppCompatActivity implements Codes {
         ///       BUTTONS       ///
         ///////////////////////////
         saveButton = findViewById(R.id.save_button);
-        deleteButton = findViewById(R.id.delete_button);
+        Button deleteButton = findViewById(R.id.delete_button);
     
         if (editing) {
             ((TextView) findViewById(R.id.header)).setText(type == TYPE_OBJECTIVE ? R.string.edit_objective : R.string.edit_performance);
@@ -222,26 +193,13 @@ public class AssessmentEditActivity extends AppCompatActivity implements Codes {
         }
         
         updateAlarmDisplay();
-        alarmDateDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                tempAlarm = Date.of(year, month + 1, day);
-                alarmTimeDialog.show();
-            }
+        alarmDateDialog = new DatePickerDialog(this, (view, year, month, day) -> {
+            tempAlarm = Date.of(year, month + 1, day);
+            alarmTimeDialog.show();
         }, alarm.getYear(), alarm.getMonth() - 1, alarm.getDay());
-        alarmTimeDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                setAlarm(hourOfDay, minute);
-            }
-        }, alarm.getHour(), alarm.getMinte(), true);
+        alarmTimeDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> setAlarm(hourOfDay, minute), alarm.getHour(), alarm.getMinte(), true);
     
-        completionDateDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                setCompletionDate(Date.of(year, month + 1, day));
-            }
-        }, completionDate.getYear(), completionDate.getMonth() - 1, completionDate.getDay());
+        completionDateDialog = new DatePickerDialog(this, (view, year, month, day) -> setCompletionDate(Date.of(year, month + 1, day)), completionDate.getYear(), completionDate.getMonth() - 1, completionDate.getDay());
     }
     
     private boolean checkNameExists() {
@@ -258,14 +216,6 @@ public class AssessmentEditActivity extends AppCompatActivity implements Codes {
             nameErrorMessage = "Assessment names must be unique within it's name. Please try something else.";
             return false;
         }
-        return true;
-    }
-    private boolean checkDescriptionExists() {
-        description = descriptionTextBox.getText().toString();
-//        if (description.isEmpty()) {
-//            descriptionErrorMessage = "Please put in a description for this objective.";
-//            return false;
-//        }
         return true;
     }
     private boolean checkCompletionDateExists() {
@@ -287,14 +237,11 @@ public class AssessmentEditActivity extends AppCompatActivity implements Codes {
     private boolean checkInputs() {
         boolean bName = checkNameExists() && checkNameIsUnique();
         nameErrorIcon.setVisibility(bName ? View.GONE : View.VISIBLE);
-    
-        boolean bDescription = checkDescriptionExists();
-        descriptionErrorIcon.setVisibility(bDescription ? View.GONE : View.VISIBLE);
         
         boolean bCompletionDate = checkCompletionDateExists() && checkCompletionDateIsInCourse();
         completionDateErrorIcon.setVisibility(bCompletionDate ? View.GONE : View.VISIBLE);
     
-        return bName && bDescription && bCompletionDate;
+        return bName && bCompletionDate;
     }
     
     public void selectCompletionDate(View view) {
@@ -332,9 +279,6 @@ public class AssessmentEditActivity extends AppCompatActivity implements Codes {
     
     public void showNameErrorMessage(View view) {
         showToast(this, nameErrorMessage);
-    }
-    public void showDescriptionErrorMessage(View view) {
-        showToast(this, descriptionErrorMessage);
     }
     public void showCompletionDateErrorMessage(View view) {
         showToast(this, completionDateErrorMessage);

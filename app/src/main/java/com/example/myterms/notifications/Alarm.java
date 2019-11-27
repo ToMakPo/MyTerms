@@ -86,8 +86,6 @@ public class Alarm extends BroadcastReceiver {
         Intent intent = new Intent(context, Alarm.class);
         intent.putExtra("bundle", bundle);
         
-//        Log.d(TAG, "   set:     " + trigger.toSQL() + " - code: " + code);
-        
         PendingIntent sender = PendingIntent
                 .getBroadcast(context, code, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         

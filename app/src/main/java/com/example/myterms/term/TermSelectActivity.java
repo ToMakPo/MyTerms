@@ -13,11 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myterms.R;
-import com.example.myterms.application.Codes;
 
+import static com.example.myterms.application.Codes.RESULT_CONFIRMED;
 import static com.example.myterms.application.MyFunctions.showToast;
 
-public class TermSelectActivity extends AppCompatActivity implements Codes {
+public class TermSelectActivity extends AppCompatActivity {
     private TermSelectAdapter adapter;
     
     private String selectedTermErrorMessage;

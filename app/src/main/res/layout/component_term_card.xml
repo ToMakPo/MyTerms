@@ -12,13 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <CheckBox
-            android:id="@+id/selected_state"
-            android:checked="false"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
         <TextView
             android:id="@+id/title_display"
             android:text="@string/term_title"

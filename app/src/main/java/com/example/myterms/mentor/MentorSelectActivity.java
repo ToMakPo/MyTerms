@@ -13,11 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myterms.R;
-import com.example.myterms.application.Codes;
 
+import static com.example.myterms.application.Codes.REQUEST_CREATE_MENTOR;
+import static com.example.myterms.application.Codes.REQUEST_EDIT_MENTOR;
+import static com.example.myterms.application.Codes.RESULT_CONFIRMED;
+import static com.example.myterms.application.Codes.RESULT_DELETED;
+import static com.example.myterms.application.Codes.RESULT_SAVED;
 import static com.example.myterms.application.MyFunctions.showToast;
 
-public class MentorSelectActivity extends AppCompatActivity implements Codes {
+public class MentorSelectActivity extends AppCompatActivity {
     private MentorSelectAdapter adapter;
     
     private String selectedMentorsErrorMessage;

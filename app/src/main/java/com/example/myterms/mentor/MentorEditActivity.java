@@ -12,11 +12,13 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myterms.R;
-import com.example.myterms.application.Codes;
 
+import static com.example.myterms.application.Codes.REQUEST_EDIT_MENTOR;
+import static com.example.myterms.application.Codes.RESULT_DELETED;
+import static com.example.myterms.application.Codes.RESULT_SAVED;
 import static com.example.myterms.application.MyFunctions.showToast;
 
-public class MentorEditActivity extends AppCompatActivity implements Codes {
+public class MentorEditActivity extends AppCompatActivity {
     private boolean editing;
     private Mentor mentor;
     
@@ -64,28 +66,25 @@ public class MentorEditActivity extends AppCompatActivity implements Codes {
         ///      NAME      ///
         //////////////////////
         nameErrorMessage = "";
-        nameTextBox = findViewById(R.id.name_text_box);
+        nameTextBox = findViewById(R.id.name_textbox);
         nameErrorIcon = findViewById(R.id.name_error_icon);
         nameTextBox.requestFocus();
-        nameTextBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    name = nameTextBox.getText().toString();
-    
-                    if (name.isEmpty()) {
-                        if (nameErrorIcon.getVisibility() == View.VISIBLE) {
-                            if (checkNameExists() && checkNameIsUnique()) {
-                                nameErrorIcon.setVisibility(View.GONE);
-                            }
-                        } else {
-                            if (!checkNameIsUnique()) {
-                                nameErrorIcon.setVisibility(View.VISIBLE);
-                            }
+        nameTextBox.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                name = nameTextBox.getText().toString();
+
+                if (name.isEmpty()) {
+                    if (nameErrorIcon.getVisibility() == View.VISIBLE) {
+                        if (checkNameExists() && checkNameIsUnique()) {
+                            nameErrorIcon.setVisibility(View.GONE);
                         }
                     } else {
-                        nameErrorIcon.setVisibility(checkNameIsUnique() ? View.GONE : View.VISIBLE);
+                        if (!checkNameIsUnique()) {
+                            nameErrorIcon.setVisibility(View.VISIBLE);
+                        }
                     }
+                } else {
+                    nameErrorIcon.setVisibility(checkNameIsUnique() ? View.GONE : View.VISIBLE);
                 }
             }
         });
@@ -94,19 +93,16 @@ public class MentorEditActivity extends AppCompatActivity implements Codes {
         ///      PHONE     ///
         //////////////////////
         phoneErrorMessage = "";
-        phoneTextBox = findViewById(R.id.phone_text_box);
+        phoneTextBox = findViewById(R.id.phone_textbox);
         phoneErrorIcon = findViewById(R.id.phone_error_icon);
-        phoneTextBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    phone = phoneTextBox.getText().toString();
-                    
-                    if (phone.isEmpty() 
-                            && phoneErrorIcon.getVisibility() == View.VISIBLE 
-                            && checkPhoneExists()) {
-                        phoneErrorIcon.setVisibility(View.GONE);
-                    }
+        phoneTextBox.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                phone = phoneTextBox.getText().toString();
+                
+                if (phone.isEmpty()
+                        && phoneErrorIcon.getVisibility() == View.VISIBLE
+                        && checkPhoneExists()) {
+                    phoneErrorIcon.setVisibility(View.GONE);
                 }
             }
         });
@@ -115,19 +111,16 @@ public class MentorEditActivity extends AppCompatActivity implements Codes {
         ///      EMAIL     ///
         //////////////////////
         emailErrorMessage = "";
-        emailTextBox = findViewById(R.id.email_text_box);
+        emailTextBox = findViewById(R.id.email_textbox);
         emailErrorIcon = findViewById(R.id.email_error_icon);
-        emailTextBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    email = emailTextBox.getText().toString();
-                    
-                    if (phone.isEmpty()
-                            && emailErrorIcon.getVisibility() == View.VISIBLE
-                            && checkEmailExists()) {
-                        emailErrorIcon.setVisibility(View.GONE);
-                    }
+        emailTextBox.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                email = emailTextBox.getText().toString();
+                
+                if (phone.isEmpty()
+                        && emailErrorIcon.getVisibility() == View.VISIBLE
+                        && checkEmailExists()) {
+                    emailErrorIcon.setVisibility(View.GONE);
                 }
             }
         });

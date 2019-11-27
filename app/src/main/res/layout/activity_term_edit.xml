@@ -22,7 +22,7 @@
 
         <!-- Title -->
         <RelativeLayout
-            android:id="@+id/title_box"
+            android:id="@+id/title_group"
             android:background="@drawable/bg_form_info"
             android:layout_margin="@dimen/form_info_margin"
             android:layout_below="@id/header"
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content" />
 
             <EditText
-                android:id="@+id/title_text_box"
+                android:id="@+id/title_textbox"
                 android:inputType="text"
                 android:background="@android:color/transparent"
                 android:textSize="@dimen/form_info_text_size"
@@ -62,10 +62,10 @@
 
         <!-- Start Date -->
         <RelativeLayout
-            android:id="@+id/start_date_box"
+            android:id="@+id/start_date_group"
             android:background="@drawable/bg_form_info"
             android:layout_margin="@dimen/form_info_margin"
-            android:layout_below="@id/title_box"
+            android:layout_below="@id/title_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -103,10 +103,10 @@
 
         <!-- End Date -->
         <RelativeLayout
-            android:id="@+id/end_date_box"
+            android:id="@+id/end_date_group"
             android:background="@drawable/bg_form_info"
             android:layout_margin="@dimen/form_info_margin"
-            android:layout_below="@id/start_date_box"
+            android:layout_below="@id/start_date_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

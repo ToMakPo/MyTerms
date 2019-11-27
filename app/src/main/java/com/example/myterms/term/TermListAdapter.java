@@ -10,13 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myterms.R;
-import com.example.myterms.dashboard.DashboardActivity;
 
 import java.util.ArrayList;
 
-public class TermCardAdapter extends RecyclerView.Adapter<TermCardAdapter.ViewHolder> {
+public class TermListAdapter extends RecyclerView.Adapter<TermListAdapter.ViewHolder> {
     private ArrayList<Term> terms;
-    private DashboardActivity activity;
+    private TermListActivity activity;
     private boolean viewActive;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -27,7 +26,7 @@ public class TermCardAdapter extends RecyclerView.Adapter<TermCardAdapter.ViewHo
         private TextView creditsDisplay;
         private ImageView passedIcon;
 
-        public ViewHolder(@NonNull View itemView, final DashboardActivity activity) {
+        public ViewHolder(@NonNull View itemView, final TermListActivity activity) {
             super(itemView);
 
             titleDisplay = itemView.findViewById(R.id.title_display);
@@ -52,8 +51,8 @@ public class TermCardAdapter extends RecyclerView.Adapter<TermCardAdapter.ViewHo
         }
     }
 
-    public TermCardAdapter(DashboardActivity activity, boolean viewActive) {
-        this.terms = new ArrayList<>();
+    public TermListAdapter(TermListActivity activity, boolean viewActive) {
+        this.terms = Term.findAllUpcoming();
         this.activity = activity;
         setViewActive(viewActive);
     }

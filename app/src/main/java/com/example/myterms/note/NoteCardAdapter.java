@@ -35,24 +35,17 @@ public class NoteCardAdapter extends RecyclerView.Adapter<NoteCardAdapter.ViewHo
     
         ViewHolder(@NonNull View itemView, final CourseViewActivity activity, final NoteCardAdapter adapter) {
             super(itemView);
-            self = this;
             
             ///   ROOT   ///
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    activity.editNote(note);
-                    return true;
-                }
+            itemView.setOnLongClickListener(view -> {
+                activity.editNote(note);
+                return true;
             });
-            itemView.findViewById(R.id.root).setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean hasFocus) {
-                    if (hasFocus) {
-                        optionsButton.setVisibility(View.VISIBLE);
-                    } else {
-                        optionsButton.setVisibility(View.GONE);
-                    }
+            itemView.findViewById(R.id.root).setOnFocusChangeListener((view, hasFocus) -> {
+                if (hasFocus) {
+                    adapter.setOptioned(this);
+                } else {
+                    adapter.clearOptioned();
                 }
             });
     
@@ -60,78 +53,47 @@ public class NoteCardAdapter extends RecyclerView.Adapter<NoteCardAdapter.ViewHo
             messageDisplay = itemView.findViewById(R.id.message_display);
     
             ///   OPTIONS BOX   ///
-            optionsBox = itemView.findViewById(R.id.options_box);
-            optionsBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        optionsBox.setVisibility(View.GONE);
-                        confirmDeleteMessageBox.setVisibility(View.GONE);
-                    }
-                }
-            });
-            
-            ///   OPTIONS BUTTON   ///
-            optionsButton = itemView.findViewById(R.id.options_button);
-            optionsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    adapter.setOptioned(self);
+            optionsBox = itemView.findViewById(R.id.options_group);
+            optionsBox.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus) {
+                    optionsBox.setVisibility(View.GONE);
+                    confirmDeleteMessageBox.setVisibility(View.GONE);
                 }
             });
     
             ///   SHARE BUTTON   ///
             ImageButton emailButton = itemView.findViewById(R.id.share_button);
-            emailButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                    emailIntent.setType("text/plain")
-                            .putExtra(Intent.EXTRA_SUBJECT, "Note for course '" + note.getCourse().getTitle() + "'")
-                            .putExtra(Intent.EXTRA_TEXT, note.getMessage());
-                    activity.startActivity(Intent.createChooser(emailIntent, "Share via:"));
-                }
+            emailButton.setOnClickListener(view -> {
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setType("text/plain")
+                        .putExtra(Intent.EXTRA_SUBJECT, "Note for course '" + note.getCourse().getTitle() + "'")
+                        .putExtra(Intent.EXTRA_TEXT, note.getMessage());
+                activity.startActivity(Intent.createChooser(emailIntent, "Share via:"));
             });
     
             ///   EDIT BUTTON   ///
             ImageButton editButton = itemView.findViewById(R.id.edit_button);
-            editButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    activity.editNote(note);
-                    adapter.clearOptioned();
-                }
+            editButton.setOnClickListener(view -> {
+                activity.editNote(note);
+                adapter.clearOptioned();
             });
     
             ///   DELETE BUTTON   ///
             ImageButton deleteButton = itemView.findViewById(R.id.delete_button);
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    confirmDeleteMessageBox.setVisibility(View.VISIBLE);
-                }
-            });
+            deleteButton.setOnClickListener(view -> confirmDeleteMessageBox.setVisibility(View.VISIBLE));
     
             ///   CONFIRM DELETE BUTTON   ///
-            confirmDeleteMessageBox = itemView.findViewById(R.id.confirm_delete_message_box);
+            confirmDeleteMessageBox = itemView.findViewById(R.id.confirm_delete_message_popup);
             TextView confirmDeleteButton = itemView.findViewById(R.id.confirm_delete_button);
-            confirmDeleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    note.delete();
-                    activity.clearAllOptioned();
-                    adapter.refresh();
-                }
+            confirmDeleteButton.setOnClickListener(view -> {
+                note.delete();
+                activity.clearAllOptioned();
+                adapter.refresh();
             });
             
             ///   CANCEL DELETE BUTTON   ///
             TextView cancelDeleteButton = itemView.findViewById(R.id.cancel_delete_button);
-            cancelDeleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    confirmDeleteMessageBox.setVisibility(View.GONE);
-                }
-            });
+            cancelDeleteButton.setOnClickListener(view -> confirmDeleteMessageBox.setVisibility(View.GONE));
         }
     }
 

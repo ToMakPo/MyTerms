@@ -18,7 +18,7 @@
 
     <!-- Name -->
     <RelativeLayout
-        android:id="@+id/name_box"
+        android:id="@+id/name_group"
         android:background="@drawable/bg_form_info"
         android:layout_margin="@dimen/form_info_margin"
         android:layout_below="@id/header"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content" />
 
         <EditText
-            android:id="@+id/name_text_box"
+            android:id="@+id/name_textbox"
             android:inputType="text"
             android:background="@android:color/transparent"
             android:textSize="@dimen/form_info_text_size"
@@ -58,10 +58,10 @@
 
     <!-- Phone Number -->
     <RelativeLayout
-        android:id="@+id/phone_box"
+        android:id="@+id/phone_group"
         android:background="@drawable/bg_form_info"
         android:layout_margin="@dimen/form_info_margin"
-        android:layout_below="@id/name_box"
+        android:layout_below="@id/name_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content" />
 
         <EditText
-            android:id="@+id/phone_text_box"
+            android:id="@+id/phone_textbox"
             android:inputType="phone"
             android:background="@android:color/transparent"
             android:textSize="@dimen/form_info_text_size"
@@ -98,10 +98,10 @@
 
     <!-- Email Address -->
     <RelativeLayout
-        android:id="@+id/email_box"
+        android:id="@+id/email_group"
         android:background="@drawable/bg_form_info"
         android:layout_margin="@dimen/form_info_margin"
-        android:layout_below="@id/phone_box"
+        android:layout_below="@id/phone_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -113,7 +113,7 @@
             android:layout_height="wrap_content" />
 
         <EditText
-            android:id="@+id/email_text_box"
+            android:id="@+id/email_textbox"
             android:inputType="textEmailAddress"
             android:background="@android:color/transparent"
             android:textSize="@dimen/form_info_text_size"

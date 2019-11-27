@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,20 +23,17 @@ public class MentorSelectAdapter extends RecyclerView.Adapter<MentorSelectAdapte
         private CheckBox nameCheckbox;
         private boolean setting_up;
 
-        public ViewHolder(@NonNull View itemView, final MentorSelectAdapter adapter) {
+        ViewHolder(@NonNull View itemView, final MentorSelectAdapter adapter) {
             super(itemView);
     
-            nameCheckbox = itemView.findViewById(R.id.name_display);
+            nameCheckbox = itemView.findViewById(R.id.name_checkbox);
 
-            nameCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (!setting_up) {
-                        if (isChecked) {
-                            adapter.addMentorToSelected(mentor);
-                        } else {
-                            adapter.removeMentorFromSelected(mentor);
-                        }
+            nameCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (!setting_up) {
+                    if (isChecked) {
+                        adapter.addMentorToSelected(mentor);
+                    } else {
+                        adapter.removeMentorFromSelected(mentor);
                     }
                 }
             });
@@ -48,7 +44,7 @@ public class MentorSelectAdapter extends RecyclerView.Adapter<MentorSelectAdapte
         }
     }
     
-    public MentorSelectAdapter(MentorSelectActivity activity, long[] selectedMentors) {
+    MentorSelectAdapter(MentorSelectActivity activity, long[] selectedMentors) {
         this.mentors = Mentor.findAll();
         this.selectedMentors = Mentor.findAllByIDs(selectedMentors);
         this.activity = activity;
@@ -71,12 +67,9 @@ public class MentorSelectAdapter extends RecyclerView.Adapter<MentorSelectAdapte
         holder.nameCheckbox.setText(mentor.getName());
         holder.nameCheckbox.setChecked(selectedMentors.contains(mentor));
         holder.setting_up = false;
-        holder.nameCheckbox.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                activity.editMentor(mentor);
-                return false;
-            }
+        holder.nameCheckbox.setOnLongClickListener(view -> {
+            activity.editMentor(mentor);
+            return false;
         });
     }
     
@@ -91,7 +84,7 @@ public class MentorSelectAdapter extends RecyclerView.Adapter<MentorSelectAdapte
         notifyDataSetChanged();
     }
     
-    public long[] getSelectedMentors() {
+    long[] getSelectedMentors() {
         long[] passedIDs = new long[selectedMentors.size()];
     
         for (int i = 0; i < selectedMentors.size(); i++) {
@@ -101,12 +94,12 @@ public class MentorSelectAdapter extends RecyclerView.Adapter<MentorSelectAdapte
         return passedIDs;
     }
     
-    public void addMentorToSelected(Mentor mentor) {
+    void addMentorToSelected(Mentor mentor) {
         if (!selectedMentors.contains(mentor))
             selectedMentors.add(mentor);
     }
     
-    public void removeMentorFromSelected(Mentor mentor) {
+    void removeMentorFromSelected(Mentor mentor) {
         for (Mentor selectedMentor : selectedMentors) {
             if (mentor.equals(selectedMentor)) {
                 selectedMentors.remove(selectedMentor);

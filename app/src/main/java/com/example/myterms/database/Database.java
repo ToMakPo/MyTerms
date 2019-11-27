@@ -44,8 +44,8 @@ public class Database extends SQLiteOpenHelper {
         sql = "CREATE TABLE '" + tableName + "' (\n" +
                 "\tid INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "\ttitle TEXT UNIQUE,\n" +
-                "\tstart_date TEXT,\n" +
-                "\tend_date TEXT\n" +
+                "\tstart_date INTEGER,\n" +
+                "\tend_date INTEGER\n" +
                 ");";
         Log.i(SQL, "Creating " + tableName + " table: \n" + sql);
         db.execSQL(sql);
@@ -63,10 +63,10 @@ public class Database extends SQLiteOpenHelper {
                 "\tterm_id INTEGER,\n" +
                 "\ttitle TEXT,\n" +
                 "\tcredits INTEGER,\n" +
-                "\tstart_date TEXT,\n" +
-                "\tend_date TEXT,\n" +
-                "\tstart_alarm TEXT,\n" +
-                "\tend_alarm TEXT,\n" +
+                "\tstart_date INTEGER,\n" +
+                "\tend_date INTEGER,\n" +
+                "\tstart_alarm INTEGER,\n" +
+                "\tend_alarm INTEGER,\n" +
                 "\tstatus INTEGER\n" +
                 ");";
         Log.i(SQL, "Creating " + tableName + " table: \n" + sql);
@@ -119,8 +119,8 @@ public class Database extends SQLiteOpenHelper {
                 "\ttype INTEGER,\n" +
                 "\tname TEXT,\n" +
                 "\tdescription BLOB,\n" +
-                "\tcompletion_date TEXT,\n" +
-                "\talarm TEXT,\n" +
+                "\tcompletion_date INTEGER,\n" +
+                "\talarm INTEGER,\n" +
                 "\tcomplete INTEGER\n" +
                 ");";
         Log.i(SQL, "Creating " + tableName + " table: \n" + sql);
