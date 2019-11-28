@@ -13,16 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".tracker.ProgressTrackerActivity"></activity>
-        <activity android:name=".term.TermListActivity" />
-        <activity android:name=".application.MainActivity">
+        <activity android:name=".dashboard.DashboardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".dashboard.DashboardActivity" />
         <activity android:name=".term.TermViewActivity" />
         <activity
             android:name=".term.TermEditActivity"
@@ -42,6 +39,8 @@
         <activity
             android:name=".note.NoteEditActivity"
             android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".tracker.ProgressTrackerActivity" />
+        <activity android:name=".term.TermListActivity" />
 
         <receiver
             android:name=".notifications.Alarm"

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.myterms.application.App;
@@ -18,28 +19,22 @@ import static com.example.myterms.application.App.HELPER;
 import static com.example.myterms.notifications.Alarm.ASSESSMENT_COMPLETE_CHANNEL;
 
 public class Assessment implements Comparable<Assessment>, Parcelable {
-    private static final String TAG = "app: Assessment";
-
-    public static final int TYPE_ALL = 0,
-                            TYPE_PERFORMANCE = 1,
-                            TYPE_OBJECTIVE = 2;
-    
     private long id;
     private Course course;
-    private int type;
+    private Type type;
     private String name;
     private String description;
     private Date completionDate;
     private Date alarm;
     private boolean complete;
     
-    private Assessment(long id, Course course, int type, String name, String description, Date completionDate, Date alarm, boolean complete) {
+    private Assessment(long id, Course course, Type type, String name, String description, Date completionDate, Date alarm, boolean complete) {
         this.id = id;
         this.course = course;
         this.type = type;
         this.name = name;
         this.description = description;
-        this.completionDate = completionDate;
+        this.completionDate = completionDate.setTime(23, 59, 59, 999);
         this.alarm = alarm;
         this.complete = complete;
     }
@@ -47,7 +42,7 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
     protected Assessment(Parcel in) {
         id = in.readLong();
         course = in.readParcelable(Course.class.getClassLoader());
-        type = in.readInt();
+        type = Type.get(in.readInt());
         name = in.readString();
         description = in.readString();
         completionDate = in.readParcelable(Date.class.getClassLoader());
@@ -58,7 +53,7 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeParcelable(course, flags);
-        dest.writeInt(type);
+        dest.writeInt(type.index);
         dest.writeString(name);
         dest.writeString(description);
         dest.writeParcelable(completionDate, flags);
@@ -84,10 +79,10 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
     public long getId() {
         return id;
     }
-    public int getType() { return type; }
     public Course getCourse() {
         return course;
     }
+    public Type getType() { return type; }
     public String getName() {
         return name;
     }
@@ -118,9 +113,10 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         return "Assessment{" +
                 "id=" + id +
                 ", course=" + course.getTitle() +
+                ", type=" + type.name().toLowerCase() +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", completion_date='" + completionDate.getDateDisplay() + '\'' +
+                ", completion_date='" + completionDate.getLongDateDisplay() + '\'' +
                 ", complete=" + complete +
                 '}';
     }
@@ -130,7 +126,7 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         int compared = this.course.compareTo(other.course);
         if (compared != 0) return compared;
         
-        compared = this.type - other.type;
+        compared = this.type.index - other.type.index;
         if (compared != 0) return compared;
 
         compared = this.completionDate.compareTo(other.completionDate);
@@ -142,7 +138,7 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
     public static Assessment parseSQL(Cursor data) {
         long id = data.getLong(0);
         Course course = Course.findByID(data.getInt(1));
-        int type = data.getInt(2);
+        Type type = Type.get(data.getInt(2));
         String name = data.getString(3);
         String description = data.getString(4);
         Date completionDate = Date.parseLong(data.getLong(5));
@@ -151,26 +147,26 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
 
         return new Assessment(id, course, type, name, description, completionDate, alarm, complete);
     }
-    public static Assessment create(Course course, int type, String name, String description) {
+    public static Assessment create(Course course, Type type, String name, String description) {
         return create(course, type, name, description, false);
     }
-    public static Assessment create(Course course, int type, String name, String description, boolean complete) {
+    public static Assessment create(Course course, Type type, String name, String description, boolean complete) {
         return create(course, type, name, description, course.getEndDate(), complete);
     }
-    public static Assessment create(Course course, int type, String name, String description, Date completionDate) {
+    public static Assessment create(Course course, Type type, String name, String description, Date completionDate) {
         return create(course, type, name, description, completionDate, false);
     }
-    public static Assessment create(Course course, int type, String name, String description, Date completionDate, boolean complete) {
+    public static Assessment create(Course course, Type type, String name, String description, Date completionDate, boolean complete) {
         return create(course, type, name, description, completionDate, Date.of(completionDate).setTime(9, 0), complete);
     }
-    public static Assessment create(Course course, int type, String name, String description, Date completionDate, Date alarm) {
+    public static Assessment create(Course course, Type type, String name, String description, Date completionDate, Date alarm) {
         return create(course, type, name, description, completionDate, alarm, false);
     }
-    public static Assessment create(Course course, int type, String name, String description, Date completionDate, Date alarm, boolean complete) {
+    public static Assessment create(Course course, Type type, String name, String description, Date completionDate, Date alarm, boolean complete) {
         ContentValues values = new ContentValues();
         
         values.put("course_id", course.getId());
-        values.put("type", type);
+        values.put("type", type.index);
         values.put("name", name);
         values.put("description", description);
         values.put("completion_date", completionDate.toLong());
@@ -198,7 +194,7 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
             bundle.putParcelable("assessment", this);
             bundle.putParcelable("course", course);
             ASSESSMENT_COMPLETE_CHANNEL.setAlarm(App.MAIN, "Expected Completion Date",
-                    "The " + (type == TYPE_OBJECTIVE ? "objective " : type == TYPE_PERFORMANCE ? "performance " : "") + "assessment for course '" + course.getTitle() + "' called '" +
+                    "The " + (type.equals(Type.ALL) ? "" : type.name().toLowerCase() + " ") + "assessment for course '" + course.getTitle() + "' called '" +
                             name + "' is expected to be completed " + (completionDate.equals(Date.today()) ? "today" : "on " + completionDate.getFormatted("%tb %<te")) + ".", alarm, (int) id, bundle);
         }
     }
@@ -217,9 +213,9 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         }
         return list;
     }
-    public static ArrayList<Assessment> findAllByType(Course course, int type) {
-        if (type == TYPE_ALL) return findAllByCourse(course);
-        return findAll("WHERE course_id = " + course.getId() + "\nAND type = " + type);
+    public static ArrayList<Assessment> findAllByType(Course course, Type type) {
+        if (type.equals(Type.ALL)) return findAllByCourse(course);
+        return findAll("WHERE course_id = " + course.getId() + "\nAND type = " + type.index);
     }
     public static ArrayList<Assessment> findAllByCourse(Course course) {
         return findAll("WHERE course_id = " + course.getId());
@@ -228,9 +224,7 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         long sLong = Date.today().toLong();
         long eLong = Date.today().addDays(30).toLong();
     
-        ArrayList<Assessment> list = findAll("WHERE complete = 0\nAND completion_date BETWEEN " + sLong + " AND " + eLong);
-    
-        return list;
+        return findAll("WHERE complete = 0\nAND completion_date BETWEEN " + sLong + " AND " + eLong);
     }
     public static Assessment findByID(long id) {
         ArrayList<Assessment> list = findAll("WHERE id = " + id);
@@ -293,5 +287,40 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         if (!(other instanceof Assessment)) return false;
         
         return this.id == ((Assessment) other).id;
+    }
+    
+    public enum Type {
+        ALL (0),
+        OBJECTIVE (1),
+        PERFORMANCE (2);
+        
+        int index;
+    
+        Type(int index) {
+            this.index = index;
+        }
+    
+        public int getIndex() {
+            return index;
+        }
+        
+        public static Type get(int index) {
+            switch (index){
+                case 0: return ALL;
+                case 1: return OBJECTIVE;
+                case 2: return PERFORMANCE;
+                default: throw new IndexOutOfBoundsException(index + " in not one of the options for Assessment Type.");
+            }
+        }
+        
+        public boolean equals(Type other) {
+            return this.index == other.index;
+        }
+        
+        @NonNull
+        @Override
+        public String toString() {
+            return name();
+        }
     }
 }

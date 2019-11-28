@@ -7,6 +7,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
 
+import com.example.myterms.application.MyFunctions;
 import com.example.myterms.course.Course;
 
 import java.util.ArrayList;
@@ -135,13 +136,7 @@ public class Mentor implements Comparable<Mentor>, Parcelable {
         return getPhoneDisplay(null);
     }
     public String getPhoneDisplay(Character delimiter) {
-        if (phoneNumber.length() != 10) return phoneNumber;
-
-        if (delimiter == null) {
-            return String.format("(%s) %s-%s", phoneNumber.substring(0, 3), phoneNumber.substring(3, 6), phoneNumber.substring(6, 10));
-        } else {
-            return String.format("%2$s%1$s%3$s$1$s%4$s", delimiter, phoneNumber.substring(0, 3), phoneNumber.substring(3, 6), phoneNumber.substring(6, 10));
-        }
+        return MyFunctions.getPhoneDisplay(phoneNumber, delimiter);
     }
 
     public static ArrayList<Mentor> findAll() {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,18 +37,15 @@ import static com.example.myterms.application.Codes.REQUEST_EDIT_PERFORMANCE;
 import static com.example.myterms.application.Codes.RESULT_DELETED;
 import static com.example.myterms.application.Codes.RESULT_DROPPED;
 import static com.example.myterms.application.Codes.RESULT_SAVED;
-import static com.example.myterms.assessment.Assessment.TYPE_OBJECTIVE;
-import static com.example.myterms.assessment.Assessment.TYPE_PERFORMANCE;
+import static com.example.myterms.assessment.Assessment.Type.OBJECTIVE;
+import static com.example.myterms.assessment.Assessment.Type.PERFORMANCE;
 import static com.example.myterms.course.Course.Status;
 import static com.example.myterms.course.Course.Status.COMPLETED;
 import static com.example.myterms.course.Course.Status.DROPPED;
 import static com.example.myterms.course.Course.Status.IN_PROGRESS;
 import static com.example.myterms.course.Course.Status.PLAN_TO_TAKE;
-import static com.example.myterms.course.Course.Status.get;
 
 public class CourseViewActivity extends AppCompatActivity {
-    private static final String TAG = "app: CVActivity";
-    
     private Course course;
     
     public static final int ACTION_CREATE = 0, ACTION_EDIT = 1;
@@ -72,7 +70,7 @@ public class CourseViewActivity extends AppCompatActivity {
     private TextView mentorPhoneDisplay;
     private TextView mentorEmailDisplay;
 
-    private RelativeLayout changeStatusPopup;
+    private RelativeLayout selectStatusPopup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,27 +105,25 @@ public class CourseViewActivity extends AppCompatActivity {
         creditsDisplay.setText(course.getCreditsDisplay());
         statusDisplay = findViewById(R.id.status_display);
         statusDisplay.setText(course.getStatus().toString());
-        statusDisplay.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                changeStatus(view);
-                return false;
-            }
-        });
+        statusDisplay.setOnClickListener(this::changeStatus);
         statusCompleteIcon = findViewById(R.id.completed_icon);
+        statusCompleteIcon.setOnClickListener(this::changeStatus);
         statusInProgressIcon = findViewById(R.id.in_progress_icon);
+        statusInProgressIcon.setOnClickListener(this::changeStatus);
         statusPlanToTakeIcon = findViewById(R.id.plan_to_take_icon);
+        statusPlanToTakeIcon.setOnClickListener(this::changeStatus);
         statusDroppedIcon = findViewById(R.id.dropped_icon);
+        statusDroppedIcon.setOnClickListener(this::changeStatus);
         updateIcon();
 
         RecyclerView.LayoutManager objectiveLayoutManager = new LinearLayoutManager(this);
-        objectiveCardAdapter = new AssessmentCardAdapter(this, course, TYPE_OBJECTIVE);
+        objectiveCardAdapter = new AssessmentCardAdapter(this, course, OBJECTIVE);
         RecyclerView objectiveRecycler = findViewById(R.id.objective_recycler);
         objectiveRecycler.setLayoutManager(objectiveLayoutManager);
         objectiveRecycler.setAdapter(objectiveCardAdapter);
 
         RecyclerView.LayoutManager performanceLayoutManager = new LinearLayoutManager(this);
-        performanceCardAdapter = new AssessmentCardAdapter(this, course, TYPE_PERFORMANCE);
+        performanceCardAdapter = new AssessmentCardAdapter(this, course, PERFORMANCE);
         RecyclerView performanceRecycler = findViewById(R.id.performance_recycler);
         performanceRecycler.setLayoutManager(performanceLayoutManager);
         performanceRecycler.setAdapter(performanceCardAdapter);
@@ -142,8 +138,19 @@ public class CourseViewActivity extends AppCompatActivity {
         mentorNameDisplay = findViewById(R.id.mentor_name_display);
         mentorPhoneDisplay = findViewById(R.id.mentor_phone_display);
         mentorEmailDisplay = findViewById(R.id.mentor_email_display);
-
-        changeStatusPopup = findViewById(R.id.change_status_popup);
+    
+        ///////////////////////////////
+        ///   SELECT STATUS POPUP   ///
+        ///////////////////////////////
+        selectStatusPopup = findViewById(R.id.select_status_popup);
+        Button planToTakeButton = findViewById(R.id.status_plan_to_take_button);
+        planToTakeButton.setOnClickListener(view -> setStatus(PLAN_TO_TAKE));
+        Button inProgressButton = findViewById(R.id.status_in_progress_button);
+        inProgressButton.setOnClickListener(view -> setStatus(IN_PROGRESS));
+        Button completedButton = findViewById(R.id.status_completed_button);
+        completedButton.setOnClickListener(view -> setStatus(COMPLETED));
+        Button droppedButton = findViewById(R.id.status_dropped_button);
+        droppedButton.setOnClickListener(view -> setStatus(DROPPED));
     }
 
     public void updateInfo() {
@@ -212,14 +219,14 @@ public class CourseViewActivity extends AppCompatActivity {
     public void createNewObjective(View view) {
         Intent intent = new Intent(this, AssessmentEditActivity.class);
         intent.putExtra("course", course);
-        intent.putExtra("type", TYPE_OBJECTIVE);
+        intent.putExtra("type", OBJECTIVE.getIndex());
         intent.putExtra("action", ACTION_CREATE);
         startActivityForResult(intent, REQUEST_CREATE_OBJECTIVE);
     }
     public void createNewPerformance(View view) {
         Intent intent = new Intent(this, AssessmentEditActivity.class);
         intent.putExtra("course", course);
-        intent.putExtra("type", Assessment.TYPE_PERFORMANCE);
+        intent.putExtra("type", PERFORMANCE.getIndex());
         intent.putExtra("action", ACTION_CREATE);
         startActivityForResult(intent, REQUEST_CREATE_PERFORMANCE);
     }
@@ -227,7 +234,7 @@ public class CourseViewActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AssessmentEditActivity.class);
         intent.putExtra("course", course);
         intent.putExtra("assessment", assessment);
-        intent.putExtra("type", assessment.getType());
+        intent.putExtra("type", assessment.getType().getIndex());
         intent.putExtra("action", ACTION_EDIT);
         startActivityForResult(intent, REQUEST_EDIT_OBJECTIVE);
     }
@@ -245,16 +252,16 @@ public class CourseViewActivity extends AppCompatActivity {
     }
 
     public void changeStatus(View view) {
-        changeStatusPopup.setVisibility(View.VISIBLE);
+        selectStatusPopup.setVisibility(View.VISIBLE);
     }
-    public void confirmStatus(View view) {
-        changeStatusPopup.setVisibility(View.GONE);
-
-        Course.Status status = get(Integer.parseInt((String)view.getTag()));
-
+    public void setStatus(Status status) {
         course.updateStatus(status);
-
-        updateInfo();
+        
+        updateIcon();
+        String text = "Status: " + status.getName();
+        statusDisplay.setText(text);
+        
+        selectStatusPopup.setVisibility(View.GONE);
     }
 
     @Override

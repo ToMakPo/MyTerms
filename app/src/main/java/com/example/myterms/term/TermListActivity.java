@@ -2,9 +2,11 @@ package com.example.myterms.term;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,9 +31,19 @@ public class TermListActivity extends AppCompatActivity {
         buildActivity();
     }
     
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
     private void buildActivity() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Term List");
+        actionBar.setDisplayHomeAsUpEnabled(true);
     
         //////////////////////
         ///   LIST VIEW    ///

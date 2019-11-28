@@ -219,14 +219,14 @@ public class CourseEditActivity extends AppCompatActivity {
         statusErrorIcon = findViewById(R.id.status_error_icon);
         statusDisplay.setOnFocusChangeListener((view, hasFocus) -> {
             if (hasFocus) {
-                selectStatus();
+                selectStatus(view);
             }
         });
     
         ///////////////////////////////
         ///   SELECT STATUS POPUP   ///
         ///////////////////////////////
-        selectStatusPopup = findViewById(R.id.change_status_popup);
+        selectStatusPopup = findViewById(R.id.select_status_popup);
         Button planToTakeButton = findViewById(R.id.status_plan_to_take_button);
         planToTakeButton.setOnClickListener(view -> setStatus(PLAN_TO_TAKE));
         Button inProgressButton = findViewById(R.id.status_in_progress_button);
@@ -255,11 +255,11 @@ public class CourseEditActivity extends AppCompatActivity {
             creditsTextBox.setText(getCreditDisplay());
 
             startDate = course.getStartDate();
-            startDateDisplay.setText(startDate.getDateDisplay());
+            startDateDisplay.setText(startDate.getLongDateDisplay());
             startAlarm = course.getStartAlarm();
 
             endDate = course.getEndDate();
-            endDateDisplay.setText(endDate.getDateDisplay());
+            endDateDisplay.setText(endDate.getLongDateDisplay());
             endAlarm = course.getEndAlarm();
 
             status = course.getStatus();
@@ -397,7 +397,7 @@ public class CourseEditActivity extends AppCompatActivity {
         endAlarm = Date.of(endDate).addMilliseconds(delta);
         updateEndAlarmDisplay();
     
-        endDateDisplay.requestFocus();
+        statusDisplay.requestFocus();
     }
     private Date tempEndAlarm;
     private void setEndAlarm(int hour, int minute) {
@@ -412,10 +412,10 @@ public class CourseEditActivity extends AppCompatActivity {
     }
     
     public void updateDateDisplay(TextView display, Date date) {
-        display.setText(date.getDateDisplay());
+        display.setText(date.getLongDateDisplay());
     }
     
-    public void selectStatus() {
+    public void selectStatus(View view) {
         selectStatusPopup.setVisibility(View.VISIBLE);
     }
     public void setStatus(Status status) {

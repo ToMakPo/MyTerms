@@ -28,8 +28,8 @@ public class Term implements Comparable<Term>, Parcelable {
     private Term(long id, String title, Date startDate, Date endDate) {
         this.id = id;
         this.title = title;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startDate = startDate.setTime(0, 0, 0, 0);
+        this.endDate = endDate.setTime(23, 59, 59, 999);
     }
     
     protected Term(Parcel in) {
@@ -38,7 +38,6 @@ public class Term implements Comparable<Term>, Parcelable {
         startDate = in.readParcelable(Date.class.getClassLoader());
         endDate = in.readParcelable(Date.class.getClassLoader());
     }
-    
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
@@ -204,6 +203,14 @@ public class Term implements Comparable<Term>, Parcelable {
 
         if (list.size() == 1) return list.get(0);
         else return null;
+    }
+    public static Term findCurrentTerm() {
+        long l = Date.now().toLong();
+        ArrayList<Term> terms = findAll("WHERE " + l + " BETWEEN start_date AND end_date");
+//        ArrayList<Term> terms = findAll("WHERE start_date < " + l + " < end_date");
+//        ArrayList<Term> terms = findAll("WHERE start_date < " + l + " AND end_date > " + l);
+        
+        return terms.isEmpty() ? null : terms.get(0);
     }
     public static ArrayList<Term> findAllActive() {
         ArrayList<Term> output = new ArrayList<>();

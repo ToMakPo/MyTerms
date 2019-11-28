@@ -13,6 +13,27 @@
         android:text="@string/current_term"
         android:background="@drawable/bg_button_blue"
         android:onClick="viewCurrentTerm"
+        android:layout_marginBottom="@dimen/between_button_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/all_terms_button"
+        android:text="@string/all_terms"
+        android:background="@drawable/bg_button_green"
+        android:onClick="viewAllTerms"
+        android:layout_marginBottom="@dimen/between_button_margin"
+        android:layout_below="@+id/current_term_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/progress_tracker_button"
+        android:text="@string/progress_tracker"
+        android:background="@drawable/bg_button_grey"
+        android:onClick="viewProgressTracker"
+        android:layout_marginBottom="@dimen/between_button_margin"
+        android:layout_below="@+id/all_terms_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     

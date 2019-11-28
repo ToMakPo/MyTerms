@@ -40,6 +40,8 @@
     <string name="mentors_label">Mentors: </string>
     <string name="objectives">Objectives</string>
     <string name="performances">Performances</string>
+    <string name="objective_assessments">Objective Assessments</string>
+    <string name="performance_assessments">Performance Assessments</string>
     <string name="assessments">Assessments</string>
     <string name="notes">Notes</string>
     <string name="objective_name">Objective Name</string>
@@ -109,4 +111,6 @@
     <string name="upcoming_courses_">Upcoming Courses:</string>
     <string name="upcoming_assessments_">Upcoming Assessments:</string>
     <string name="current_term">Current Term</string>
+    <string name="all_terms">All Terms</string>
+    <string name="progress_tracker">Progress Tracker</string>
 </resources>

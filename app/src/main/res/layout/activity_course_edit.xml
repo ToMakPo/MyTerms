@@ -350,6 +350,7 @@
             <TextView
                 android:id="@+id/status_display"
                 android:background="@android:color/transparent"
+                android:onClick="selectStatus"
                 android:textSize="@dimen/form_info_text_size"
                 android:layout_below="@+id/status_label"
                 android:layout_width="match_parent"

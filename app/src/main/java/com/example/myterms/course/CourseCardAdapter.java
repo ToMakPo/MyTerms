@@ -22,7 +22,7 @@ public class CourseCardAdapter extends RecyclerView.Adapter<CourseCardAdapter.Vi
     private Term term;
     private ArrayList<Course> courses;
     private TermViewActivity activity;
-    private boolean viewAll;
+    private boolean viewActive;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private Course course;
@@ -48,19 +48,11 @@ public class CourseCardAdapter extends RecyclerView.Adapter<CourseCardAdapter.Vi
             statusPlanToTakeIcon = itemView.findViewById(R.id.plan_to_take_icon);
             statusDroppedIcon = itemView.findViewById(R.id.dropped_icon);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    activity.viewCourse(course);
-                }
-            });
+            itemView.setOnClickListener(view -> activity.viewCourse(course));
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    activity.editCourse(course);
-                    return true;
-                }
+            itemView.setOnLongClickListener(view -> {
+                activity.editCourse(course);
+                return true;
             });
         }
 
@@ -75,9 +67,10 @@ public class CourseCardAdapter extends RecyclerView.Adapter<CourseCardAdapter.Vi
 
     public CourseCardAdapter(TermViewActivity activity, Term term) {
         this.term = term;
-        this.courses = term.getActiveCourses();
         this.activity = activity;
-        this.viewAll = false;
+        this.viewActive = activity.viewActiveCheckbox.isChecked();
+        this.courses = new ArrayList<>();
+        refresh();
     }
 
     @NonNull
@@ -106,12 +99,12 @@ public class CourseCardAdapter extends RecyclerView.Adapter<CourseCardAdapter.Vi
 
     public void refresh() {
         courses.clear();
-        courses.addAll(viewAll ? term.getCourses() : term.getActiveCourses());
+        courses.addAll(viewActive ? term.getActiveCourses() : term.getCourses());
         notifyDataSetChanged();
     }
 
-    public void setViewAll(boolean viewAll) {
-        this.viewAll = viewAll;
+    public void setViewActive(boolean viewActive) {
+        this.viewActive = viewActive;
         refresh();
     }
 }

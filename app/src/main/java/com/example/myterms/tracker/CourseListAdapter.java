@@ -65,10 +65,10 @@ public class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.Vi
         
         activity.upcomingCourseRecycler.setAdapter(this);
         
-        if (courses.isEmpty()) {
+//        if (courses.isEmpty()) {
             activity.upcomingCourseLabel.setVisibility(View.GONE);
             activity.upcomingCourseRecycler.setVisibility(View.GONE);
-        }
+//        }
     }
 
     @NonNull

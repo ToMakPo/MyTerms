@@ -15,6 +15,7 @@
             android:id="@+id/note_icon"
             android:src="@drawable/ic_note"
             android:contentDescription="@string/icon"
+            android:layout_marginEnd="@dimen/between_button_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

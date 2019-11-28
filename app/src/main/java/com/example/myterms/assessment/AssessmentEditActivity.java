@@ -23,13 +23,13 @@ import com.example.myterms.course.CourseViewActivity;
 import static com.example.myterms.application.Codes.RESULT_DELETED;
 import static com.example.myterms.application.Codes.RESULT_SAVED;
 import static com.example.myterms.application.MyFunctions.showToast;
-import static com.example.myterms.assessment.Assessment.TYPE_OBJECTIVE;
+import static com.example.myterms.assessment.Assessment.Type.OBJECTIVE;
 
 public class AssessmentEditActivity extends AppCompatActivity {
     private boolean editing;
     private Assessment assessment;
 
-    private int type;
+    private Assessment.Type type;
     private Course course;
     
     private String name;
@@ -74,7 +74,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
     
     private void buildActivity() {
         Intent received = getIntent();
-        type = received.getIntExtra("type", -1);
+        type = Assessment.Type.get(received.getIntExtra("type", -1));
         int action = received.getIntExtra("action", -1);
         editing = action == CourseViewActivity.ACTION_EDIT;
         ActionBar actionBar = getSupportActionBar();
@@ -157,7 +157,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
         Button deleteButton = findViewById(R.id.delete_button);
     
         if (editing) {
-            ((TextView) findViewById(R.id.header)).setText(type == TYPE_OBJECTIVE ? R.string.edit_objective : R.string.edit_performance);
+            ((TextView) findViewById(R.id.header)).setText(type == OBJECTIVE ? R.string.edit_objective : R.string.edit_performance);
         
             assessment = received.getParcelableExtra("assessment");
             if (assessment == null) throw new RuntimeException("Could not get assessment from received.");
@@ -169,7 +169,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
             descriptionTextBox.setText(description);
         
             completionDate = assessment.getCompletionDate();
-            completionDateDisplay.setText(completionDate.getDateDisplay());
+            completionDateDisplay.setText(completionDate.getLongDateDisplay());
             
             complete = assessment.isComplete();
             completeCheckBox.setChecked(complete);
@@ -178,7 +178,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
     
             deleteButton.setVisibility(View.VISIBLE);
         } else {
-            ((TextView) findViewById(R.id.header)).setText(type == TYPE_OBJECTIVE ? R.string.new_objective : R.string.new_performance);
+            ((TextView) findViewById(R.id.header)).setText(type == OBJECTIVE ? R.string.new_objective : R.string.new_performance);
             
             assessment = null;
         
@@ -251,7 +251,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
         long delta = alarm.millisUntil(completionDate);
         
         this.completionDate = date;
-        completionDateDisplay.setText(date.getDateDisplay());
+        completionDateDisplay.setText(date.getLongDateDisplay());
         
         if (completionDateErrorIcon.getVisibility() == View.VISIBLE)
             completionDateErrorIcon.setVisibility(checkCompletionDateExists() ? View.GONE : View.VISIBLE);
@@ -286,6 +286,8 @@ public class AssessmentEditActivity extends AppCompatActivity {
 
     public void saveAssessment(View view) {
         if (checkInputs()) {
+            description = descriptionTextBox.getText().toString();
+            
             if (editing) {
                 assessment.update(name, description, completionDate, alarm, complete);
             } else {

@@ -164,7 +164,7 @@
                     android:id="@+id/objective_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/objectives"
+                    android:text="@string/objective_assessments"
                     android:textSize="@dimen/sub_header_text_size" />
 
                 <ImageView
@@ -185,7 +185,7 @@
 
                     <TextView
                         android:id="@+id/performance_header"
-                        android:text="@string/performances"
+                        android:text="@string/performance_assessments"
                         android:textSize="@dimen/sub_header_text_size"
                         android:layout_below="@id/objective_recycler"
                         android:layout_width="wrap_content"
@@ -290,77 +290,77 @@
 
     </RelativeLayout>
 
-    <!-- CHANGE STATUS POPUP -->
     <RelativeLayout
-        android:id="@+id/change_status_popup"
-        android:visibility="gone"
-        android:clickable="true"
+        android:id="@+id/select_status_popup"
         android:background="@color/popup_bg_mask"
+        android:clickable="true"
+        android:visibility="gone"
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:background="@color/popup_bg"
-            android:padding="20dp"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:background="@drawable/bg_dark_rounded"
+            android:layout_centerVertical="true"
+            android:padding="5dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="@string/change_status_to"
-                android:textSize="@dimen/popup_text_size"
-                android:textColor="@color/popup_fg"
-                android:layout_marginBottom="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/change_status_to_completed"
-                android:text="@string/status_completed"
-                android:background="@drawable/bg_button_green"
-                android:textColor="@color/green_button_fg"
-                android:onClick="confirmStatus"
-                android:tag="0"
-                android:layout_margin="@dimen/between_button_margin"
+                android:id="@+id/select_status_message"
+                android:text="@string/please_select_the_course_status"
+                android:textSize="@dimen/sub_header_text_size"
+                android:textColor="#CCC"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <Button
-                android:id="@+id/change_status_to_in_progress"
-                android:text="@string/status_in_progress"
-                android:background="@drawable/bg_button_blue"
-                android:textColor="@color/blue_button_fg"
-                android:onClick="confirmStatus"
-                android:tag="1"
-                android:layout_margin="@dimen/between_button_margin"
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_below="@id/select_status_message"
+                android:paddingHorizontal="25dp"
+                android:paddingVertical="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/change_status_to_plan_to_take"
-                android:text="@string/status_plan_to_take"
-                android:background="@drawable/bg_button_grey"
-                android:textColor="@color/grey_button_fg"
-                android:onClick="confirmStatus"
-                android:tag="2"
-                android:layout_margin="@dimen/between_button_margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <Button
+                    android:id="@+id/status_plan_to_take_button"
+                    android:text="@string/status_plan_to_take"
+                    android:textColor="@color/grey_button_fg"
+                    android:background="@drawable/bg_button_grey"
+                    android:layout_marginVertical="2.5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <Button
-                android:id="@+id/change_status_to_dropped"
-                android:text="@string/status_dropped"
-                android:background="@drawable/bg_button_red"
-                android:textColor="@color/red_button_fg"
-                android:onClick="confirmStatus"
-                android:tag="-1"
-                android:layout_margin="@dimen/between_button_margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <Button
+                    android:id="@+id/status_in_progress_button"
+                    android:text="@string/status_in_progress"
+                    android:textColor="@color/blue_button_fg"
+                    android:background="@drawable/bg_button_blue"
+                    android:layout_marginVertical="2.5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/status_completed_button"
+                    android:text="@string/status_completed"
+                    android:textColor="@color/green_button_fg"
+                    android:background="@drawable/bg_button_green"
+                    android:layout_marginVertical="2.5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/status_dropped_button"
+                    android:text="@string/status_dropped"
+                    android:textColor="@color/red_button_fg"
+                    android:background="@drawable/bg_button_red"
+                    android:layout_marginVertical="2.5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

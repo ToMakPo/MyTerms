@@ -22,25 +22,30 @@ public abstract class MyFunctions {
 
         return s;
     }
-    public static String cropBegaining(String str, int length) {
+    public static String cropBeginning(String str, int length) {
         if (str.length() > length) {
-            return "\u2026" + str.substring(1);
+//            return "\u2026" + str.substring(1);
+            return "..." + str.substring(3);
         } else {
             return str;
         }
     }
     public static String cropMiddle(String str, int maxLength) {
         if (str.length() > maxLength) {
-            int f = (int)Math.ceil((maxLength - 1) / 2);
-            int b = maxLength - f - 1;
-            return str.substring(0, f) + "\u2026" + str.substring(b);
+            int f = (int)Math.ceil((maxLength - 3) / 2);
+            int b = maxLength - f - 3;
+            return str.substring(0, f) + "..." + str.substring(b);
+//            int f = (int)Math.ceil((maxLength - 1) / 2);
+//            int b = maxLength - f - 1;
+//            return str.substring(0, f) + "\u2026" + str.substring(b);
         } else {
             return str;
         }
     }
     public static String cropEnd(String str, int length) {
         if (str.length() > length) {
-            return str.substring(0, length - 1) + "\u2026";
+            return str.substring(0, length - 3) + "...";
+//            return str.substring(0, length - 1) + "\u2026";
         } else {
             return str;
         }
@@ -54,11 +59,11 @@ public abstract class MyFunctions {
         String str = String.format(format, value);
 
         if (str.length() > width) {
-            return cropBegaining(str, width);
+            return cropEnd(str, width);
         } else if (str.length() == width) {
             return str;
         } else {
-            return String.format(format.replace("%", "%" + width), value);
+            return String.format(format.replace("%", "%-" + width), value);
         }
     }
     public static String alignCenter(Object value, int width) {
@@ -88,7 +93,7 @@ public abstract class MyFunctions {
         String str = String.format(format, value);
 
         if (str.length() > width) {
-            return cropEnd(str, width);
+            return cropBeginning(str, width);
         } else if (str.length() == width) {
             return str;
         } else {
@@ -103,5 +108,18 @@ public abstract class MyFunctions {
         TextView toastMessage = toast.getView().findViewById(android.R.id.message);
         toastMessage.setTextColor(Color.LTGRAY);
         toast.show();
+    }
+    
+    public static String getPhoneDisplay(String phoneNumber) {
+        return getPhoneDisplay(phoneNumber, null);
+    }
+    public static String getPhoneDisplay(String phoneNumber, Character delimiter) {
+        if (phoneNumber.length() != 10) return phoneNumber;
+        
+        if (delimiter == null) {
+            return String.format("(%s) %s-%s", phoneNumber.substring(0, 3), phoneNumber.substring(3, 6), phoneNumber.substring(6, 10));
+        } else {
+            return String.format("%2$s%1$s%3$s%1$s%4$s", delimiter, phoneNumber.substring(0, 3), phoneNumber.substring(3, 6), phoneNumber.substring(6, 10));
+        }
     }
 }

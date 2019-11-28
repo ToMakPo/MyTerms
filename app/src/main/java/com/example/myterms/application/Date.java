@@ -421,6 +421,10 @@ public class Date extends GregorianCalendar implements Parcelable {
         return addMilliseconds((int) n);
     }
     
+    public boolean isCurrentYear() {
+        return getYear() == Date.today().getYear();
+    }
+    
     @Override
     public String toString() {
         return toSQL();
@@ -432,7 +436,13 @@ public class Date extends GregorianCalendar implements Parcelable {
         return str;
     }
     public String getDateDisplay() {
+        return getFormatted("%tY-%<tm-%<td");
+    }
+    public String getLongDateDisplay() {
         return getFormatted("%tB %<td, %<tY");
+    }
+    public String getShortDateDisplay() {
+        return getFormatted("%tb %<td" + (isCurrentYear() ? "" : ", %<tY"));
     }
     public String getTimeDisplay() {
         return getFormatted("%tH:%<tM:%<tS");

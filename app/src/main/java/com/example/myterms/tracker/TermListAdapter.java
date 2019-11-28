@@ -44,10 +44,10 @@ public class TermListAdapter extends RecyclerView.Adapter<TermListAdapter.ViewHo
         
         activity.upcomingTermRecycler.setAdapter(this);
         
-        if (terms.isEmpty()) {
+//        if (terms.isEmpty()) {
             activity.upcomingTermLabel.setVisibility(View.GONE);
             activity.upcomingTermRecycler.setVisibility(View.GONE);
-        }
+//        }
     }
 
     @NonNull

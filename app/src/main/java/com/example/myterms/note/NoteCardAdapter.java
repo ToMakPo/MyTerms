@@ -26,10 +26,8 @@ public class NoteCardAdapter extends RecyclerView.Adapter<NoteCardAdapter.ViewHo
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         private Note note;
-        private ViewHolder self;
 
         private TextView messageDisplay;
-        private ImageButton optionsButton;
         private LinearLayout optionsBox;
         private RelativeLayout confirmDeleteMessageBox;
     
@@ -129,9 +127,7 @@ public class NoteCardAdapter extends RecyclerView.Adapter<NoteCardAdapter.ViewHo
         activity.clearAllOptioned();
         
         optioned = card;
-        optioned.optionsButton.setVisibility(View.GONE);
         optioned.optionsBox.setVisibility(View.VISIBLE);
-        optioned.optionsBox.requestFocus();
     }
 
     @Override

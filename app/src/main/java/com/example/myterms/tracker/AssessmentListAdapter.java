@@ -50,10 +50,10 @@ public class AssessmentListAdapter extends RecyclerView.Adapter<AssessmentListAd
         
         activity.upcomingAssessmentRecycler.setAdapter(this);
         
-        if (assessments.isEmpty()) {
+//        if (assessments.isEmpty()) {
             activity.upcomingAssessmentLabel.setVisibility(View.GONE);
             activity.upcomingAssessmentRecycler.setVisibility(View.GONE);
-        }
+//        }
     }
 
     @NonNull
@@ -70,7 +70,7 @@ public class AssessmentListAdapter extends RecyclerView.Adapter<AssessmentListAd
         holder.assessment = assessment;
     
         holder.nameDisplay.setText(assessment.getName());
-        holder.dateDisplay.setText(assessment.getCompletionDate().getDateDisplay());
+        holder.dateDisplay.setText(assessment.getCompletionDate().getLongDateDisplay());
         holder.descriptionDisplay.setText(assessment.getDescription());
     }
 

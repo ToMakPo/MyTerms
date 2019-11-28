@@ -154,10 +154,10 @@ public class TermEditActivity extends AppCompatActivity {
             titleTextBox.setText(title);
         
             startDate = term.getStartDate();
-            startDateDisplay.setText(startDate.getDateDisplay());
+            startDateDisplay.setText(startDate.getLongDateDisplay());
         
             endDate = term.getEndDate();
-            endDateDisplay.setText(endDate.getDateDisplay());
+            endDateDisplay.setText(endDate.getLongDateDisplay());
             
             findViewById(R.id.delete_button).setVisibility(View.VISIBLE);
         } else {
@@ -223,7 +223,7 @@ public class TermEditActivity extends AppCompatActivity {
     }
     
     public void updateDateDisplay(TextView display, Date date) {
-        display.setText(date.getDateDisplay());
+        display.setText(date.getLongDateDisplay());
     }
     
     private boolean checkTitleExists() {

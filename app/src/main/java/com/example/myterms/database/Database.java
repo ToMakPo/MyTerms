@@ -10,8 +10,22 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.example.myterms.application.App;
+import com.example.myterms.application.Date;
+import com.example.myterms.application.MyFunctions;
+import com.example.myterms.assessment.Assessment;
+import com.example.myterms.course.Course;
+import com.example.myterms.course.Course.Status;
+import com.example.myterms.mentor.Mentor;
+import com.example.myterms.term.Term;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static com.example.myterms.application.MyFunctions.alignCenter;
+import static com.example.myterms.application.MyFunctions.alignLeft;
+import static com.example.myterms.application.MyFunctions.alignRight;
+import static com.example.myterms.application.MyFunctions.repeat;
 
 public class Database extends SQLiteOpenHelper {
     private static final String TAG = "app: Database";
@@ -244,5 +258,251 @@ public class Database extends SQLiteOpenHelper {
             Log.e(TAG, "tablesAlreadyPopulated: error getting table", e);
             return -1;
         }
+    }
+    
+    private String getTable(String tableName, LinkedHashMap<String, String> colInfo) {
+        // get database rows
+        Cursor data = getData(tableName, "");
+        
+        // set the column count
+        final int colCount = colInfo.size();
+        
+        // create the column information arrays
+        String[] headers = new String[colCount];
+        String[] separators = new String[colCount];
+        Integer[] widths = new Integer[colCount];
+        String[] classes = new String[colCount];
+        
+        int i = 0;
+        for (Map.Entry<String, String> entry : colInfo.entrySet()) {
+            String header = entry.getKey();
+            String colClass = entry.getValue();
+            
+            headers[i] = header;
+            separators[i] = "";
+            widths[i] = header.length();
+            classes[i] = colClass;
+            
+            i++;
+        }
+    
+        // create the table the will hold all of the values
+        ArrayList<String[]> table = new ArrayList<>();
+    
+        // add the values to the table
+        while (data.moveToNext()) {
+            String[] row = new String[colCount];
+    
+            for (i = 0; i < colCount; i++) {
+                String value;
+                
+                switch (classes[i]) {
+                    case "String":
+                    case "Blob":
+                        value = data.getString(i);
+                        break;
+                    case "Integer":
+                        value = String.valueOf(data.getInt(i));
+                        break;
+                    case "Long":
+                        value = String.valueOf(data.getLong(i));
+                        break;
+                    case "Date":
+                        value = Date.parseLong(data.getLong(i)).getDateDisplay();
+                        break;
+                    case "DateTime":
+                        value = Date.parseLong(data.getLong(i)).toSQL();
+                        break;
+                    case "Time":
+                        value = Date.parseLong(data.getLong(i)).getTimeDisplay();
+                        break;
+                    case "Boolean":
+                        value = data.getInt(i) == 1 ? "true" : "false";
+                        break;
+                    case "Double":
+                        value = String.valueOf(data.getDouble(i));
+                        break;
+                    case "Phone":
+                        value = MyFunctions.getPhoneDisplay(String.valueOf(data.getString(i)), '.');
+                        break;
+                    case "Term":
+                        Term term = Term.findByID(data.getLong(i));
+                        value = term != null ? term.getTitle() : "null";
+                        break;
+                    case "Course":
+                        Course course = Course.findByID(data.getLong(i));
+                        value = course != null ? course.getTitle() : "null";
+                        break;
+                    case "Mentor":
+                        Mentor mentor = Mentor.findByID(data.getLong(i));
+                        value = mentor != null ? mentor.getName() : "null";
+                        break;
+                    case "Course Status":
+                        Status status = Status.get(data.getInt(i));
+                        value = status != null ? status.getName() : "null";
+                        break;
+                    case "Assessment Type":
+                        Assessment.Type type = Assessment.Type.get(data.getInt(i));
+                        value = type != null ? type.name() : "null";
+                        break;
+                    default:
+                        value = "UNDEFINED";
+                }
+    
+                row[i] = value;
+    
+                // set max width for each column
+                int len = value.length();
+                if (len > widths[i])
+                    widths[i] = len;
+            }
+            
+            table.add(row);
+        }
+    
+        // limit width to max width
+        for (i = 0; i < colCount; i++) {
+            int maxWidth = 50;
+            if (widths[i] > maxWidth) widths[i] = maxWidth;
+        }
+        
+        // add padding to all of the values
+        table.forEach(row -> {
+            for (int j = 0; j < colCount; j++) {
+                int width = widths[j];
+                String value = row[j];
+                switch (classes[j]) {
+                    case "Integer":
+                    case "Long":
+                    case "Double":
+                        value = " " + alignRight(value, width) + " ";
+                        break;
+                    case "Boolean":
+                    case "Date":
+                    case "DateTime":
+                    case "Time":
+                        value = " " + alignCenter(value, width) + " ";
+                        break;
+                    default:
+                        value = " " + alignLeft(value, width) + " ";
+                }
+                row[j] = value;
+            }
+        });
+    
+        // add padding to the headers and create separators
+        for (i = 0; i < colCount; i++) {
+            headers[i] = alignCenter(headers[i], widths[i] + 2);
+            separators[i] = repeat("-", widths[i] + 2);
+        }
+        
+        // add headers and separators to the table
+        table.add(0, headers);
+        table.add(1, separators);
+        
+        // create the output string
+        String output = tableName.toUpperCase() + " TABLE";
+        
+        for (String[] row : table) {
+            output += "\n|";
+    
+            for (i = 0; i < colCount; i++) {
+                output += row[i] + "|";
+            }
+        }
+        
+        // return output
+        return output;
+    }
+    public String getTermTable() {
+        LinkedHashMap<String, String> colInfo = new LinkedHashMap<>();
+        colInfo.put("ID", "Long");
+        colInfo.put("TITLE", "String");
+        colInfo.put("START DATE", "Date");
+        colInfo.put("END DATE", "Date");
+        
+        return getTable("Term", colInfo);
+    }
+    public String getCourseTable() {
+        LinkedHashMap<String, String> colInfo = new LinkedHashMap<>();
+        colInfo.put("ID", "Long");
+        colInfo.put("TERM", "Term");
+        colInfo.put("TITLE", "String");
+        colInfo.put("CREDITS", "Integer");
+        colInfo.put("START DATE", "Date");
+        colInfo.put("END DATE", "Date");
+        colInfo.put("START ALARM", "DateTime");
+        colInfo.put("END ALARM", "DateTime");
+        colInfo.put("STATUS", "Course Status");
+    
+        return getTable("Course", colInfo);
+    }
+    public String getMentorTable() {
+        LinkedHashMap<String, String> colInfo = new LinkedHashMap<>();
+        colInfo.put("ID", "Long");
+        colInfo.put("NAME", "String");
+        colInfo.put("PHONE NUMBER", "Phone");
+        colInfo.put("EMAIL ADDRESS", "String");
+    
+        return getTable("Mentor", colInfo);
+    }
+    public String getCourseMentorTable() {
+        LinkedHashMap<String, String> colInfo = new LinkedHashMap<>();
+        colInfo.put("ID", "Long");
+        colInfo.put("COURSE", "Course");
+        colInfo.put("MENTOR", "Mentor");
+    
+        return getTable("CourseMentor", colInfo);
+    }
+    public String getAssessmentTable() {
+        LinkedHashMap<String, String> colInfo = new LinkedHashMap<>();
+        colInfo.put("ID", "Long");
+        colInfo.put("COURSE", "Course");
+        colInfo.put("TYPE", "Assessment Type");
+        colInfo.put("NAME", "String");
+        colInfo.put("DESCRIPTION", "Blob");
+        colInfo.put("COMPLETION DATE", "Date");
+        colInfo.put("ALARM", "DateTime");
+        colInfo.put("COMPLETE", "Boolean");
+    
+        return getTable("Assessment", colInfo);
+    }
+    public String getNoteTable() {
+        LinkedHashMap<String, String> colInfo = new LinkedHashMap<>();
+        colInfo.put("ID", "Long");
+        colInfo.put("COURSE", "Course");
+        colInfo.put("MESSAGE", "Blob");
+    
+        return getTable("Note", colInfo);
+    }
+    
+    public void printTermTable() {
+        printTable(getTermTable());
+    }
+    public void printCourseTable() {
+        printTable(getCourseTable());
+    }
+    public void printMentorTable() {
+        printTable(getMentorTable());
+    }
+    public void printCourseMentorTable() {
+        printTable(getCourseMentorTable());
+    }
+    public void printAssessmentTable() {
+        printTable(getAssessmentTable());
+    }
+    public void printNoteTable() {
+        printTable(getNoteTable());
+    }
+    private void printTable(String tableOutput) {
+        Log.i(TAG, "printTable: \n" + tableOutput);
+    }
+    public void printAllTables() {
+        printTermTable();
+        printCourseTable();
+        printMentorTable();
+        printCourseMentorTable();
+        printAssessmentTable();
+        printNoteTable();
     }
 }

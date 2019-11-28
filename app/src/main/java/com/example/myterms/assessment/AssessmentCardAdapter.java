@@ -23,7 +23,7 @@ public class AssessmentCardAdapter extends RecyclerView.Adapter<AssessmentCardAd
     private Course course;
     private ArrayList<Assessment> assessments;
     private CourseViewActivity activity;
-    private int type;
+    private Assessment.Type type;
     private ViewHolder optioned;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -64,13 +64,13 @@ public class AssessmentCardAdapter extends RecyclerView.Adapter<AssessmentCardAd
             
             ///   COMPLETED ICON   ///
             completeIcon = itemView.findViewById(R.id.completed_icon);
-            completeIcon.setOnClickListener(v -> markAsIncomplete(activity));
+            completeIcon.setOnClickListener(view -> markAsIncomplete(activity));
             incompleteIcon = itemView.findViewById(R.id.incomplete_icon);
-            incompleteIcon.setOnClickListener(v -> markAsComplete(activity));
+            incompleteIcon.setOnClickListener(view -> markAsComplete(activity));
 
             ///   OPTIONS BOX   ///
             optionsBox = itemView.findViewById(R.id.options_group);
-            optionsBox.setOnFocusChangeListener((v, hasFocus) -> {
+            optionsBox.setOnFocusChangeListener((view, hasFocus) -> {
                 if (!hasFocus) {
                     optionsBox.setVisibility(View.GONE);
                     confirmDeleteMessageBox.setVisibility(View.GONE);
@@ -116,7 +116,7 @@ public class AssessmentCardAdapter extends RecyclerView.Adapter<AssessmentCardAd
         }
     }
     
-    public AssessmentCardAdapter(CourseViewActivity activity, Course course, int assessmentType) {
+    public AssessmentCardAdapter(CourseViewActivity activity, Course course, Assessment.Type assessmentType) {
         this.course = course;
         this.type = assessmentType;
         this.assessments = course.getAssessments(type);
@@ -138,8 +138,9 @@ public class AssessmentCardAdapter extends RecyclerView.Adapter<AssessmentCardAd
         boolean complete = assessment.isComplete();
     
         holder.nameDisplay.setText(assessment.getName());
-        holder.dateDisplay.setText(assessment.getCompletionDate().getDateDisplay());
+        holder.dateDisplay.setText(assessment.getCompletionDate().getShortDateDisplay());
         holder.descriptionDisplay.setText(assessment.getDescription());
+        holder.descriptionDisplay.setVisibility(assessment.getDescription().isEmpty() ? View.GONE : View.VISIBLE);
         holder.completeIcon.setVisibility(complete ? View.VISIBLE : View.GONE);
         holder.incompleteIcon.setVisibility(complete ? View.GONE : View.VISIBLE);
     }
@@ -156,7 +157,6 @@ public class AssessmentCardAdapter extends RecyclerView.Adapter<AssessmentCardAd
         
         optioned = card;
         optioned.optionsBox.setVisibility(View.VISIBLE);
-        optioned.optionsBox.requestFocus();
     }
 
     @Override

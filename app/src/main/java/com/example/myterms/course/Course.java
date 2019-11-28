@@ -24,6 +24,8 @@ import java.util.Arrays;
 
 import static com.example.myterms.application.App.HELPER;
 import static com.example.myterms.application.App.MAIN;
+import static com.example.myterms.assessment.Assessment.Type.OBJECTIVE;
+import static com.example.myterms.assessment.Assessment.Type.PERFORMANCE;
 import static com.example.myterms.notifications.Alarm.COURSE_END_CHANNEL;
 import static com.example.myterms.notifications.Alarm.COURSE_START_CHANNEL;
 
@@ -45,8 +47,8 @@ public class Course implements Comparable<Course>, Parcelable {
         this.term = term;
         this.title = title;
         this.credits = credits;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startDate = startDate.setTime(0, 0, 0, 0);
+        this.endDate = endDate.setTime(23, 59, 59, 999);
         this.startAlarm = startAlarm;
         this.endAlarm = endAlarm;
         this.status = status;
@@ -128,15 +130,15 @@ public class Course implements Comparable<Course>, Parcelable {
         return list;
     }
     public ArrayList<Assessment> getObjectives() {
-        return Assessment.findAllByType(this, Assessment.TYPE_OBJECTIVE);
+        return Assessment.findAllByType(this, OBJECTIVE);
     }
     public ArrayList<Assessment> getPerformances() {
-        return Assessment.findAllByType(this, Assessment.TYPE_PERFORMANCE);
+        return Assessment.findAllByType(this, PERFORMANCE);
     }
     public ArrayList<Assessment> getAssessments() {
         return Assessment.findAll("WHERE course_id = " + id);
     }
-    public ArrayList<Assessment> getAssessments(int type) {
+    public ArrayList<Assessment> getAssessments(Assessment.Type type) {
         return Assessment.findAllByType(this, type);
     }
     public ArrayList<Note> getNotes() {
@@ -308,7 +310,13 @@ public class Course implements Comparable<Course>, Parcelable {
         return create(term, title, credits, term.getStartDate(), term.getEndDate(), mentors);
     }
     public static Course create(Term term, String title, int credits, Status status, Mentor ...mentors) {
-        return create(term, title, credits, term.getStartDate(), term.getEndDate(), mentors);
+        return create(term, title, credits, term.getStartDate(), term.getEndDate(), status, mentors);
+    }
+    private static Course create(Term term, String title, int credits, Date startDate, Date endDate, Status status, Mentor[] mentors) {
+        Date startAlarm = Date.of(startDate).setTime(9,0);
+        Date endAlarm = Date.of(endDate).setTime(9,0);
+    
+        return create(term, title, credits, term.getStartDate(), term.getEndDate(), startAlarm, endAlarm, status, mentors);
     }
     public static Course create(Term term, String title, int credits, Date startDate, Date endDate, Mentor ...mentors) {
         Date startAlarm = Date.of(startDate).setTime(9,0);
@@ -547,27 +555,27 @@ public class Course implements Comparable<Course>, Parcelable {
         cancelEndAlarm();
     }
     
-    public Course addAssessment(int type, String name, String description) {
+    public Course addAssessment(Assessment.Type type, String name, String description) {
         Assessment.create(this, type, name, description);
         return this;
     }
-    public Course addAssessment(int type, String name, String description, boolean complete) {
+    public Course addAssessment(Assessment.Type type, String name, String description, boolean complete) {
         Assessment.create(this, type, name, description, complete);
         return this;
     }
-    public Course addAssessment(int type, String name, String description, Date completionDate) {
+    public Course addAssessment(Assessment.Type type, String name, String description, Date completionDate) {
         Assessment.create(this, type, name, description, completionDate);
         return this;
     }
-    public Course addAssessment(int type, String name, String description, Date completionDate, boolean complete) {
+    public Course addAssessment(Assessment.Type type, String name, String description, Date completionDate, boolean complete) {
         Assessment.create(this, type, name, description, completionDate, complete);
         return this;
     }
-    public Course addAssessment(int type, String name, String description, Date completionDate, Date alarm) {
+    public Course addAssessment(Assessment.Type type, String name, String description, Date completionDate, Date alarm) {
         Assessment.create(this, type, name, description, completionDate, alarm);
         return this;
     }
-    public Course addAssessment(int type, String name, String description, Date completionDate, Date alarm, boolean complete) {
+    public Course addAssessment(Assessment.Type type, String name, String description, Date completionDate, Date alarm, boolean complete) {
         Assessment.create(this, type, name, description, completionDate, alarm, complete);
         return this;
     }
@@ -610,7 +618,6 @@ public class Course implements Comparable<Course>, Parcelable {
             return index;
         }
         
-
         public static Status get(int index) {
             switch (index) {
                 case -1: return DROPPED;

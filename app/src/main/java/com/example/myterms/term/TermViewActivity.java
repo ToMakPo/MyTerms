@@ -32,7 +32,7 @@ public class TermViewActivity extends AppCompatActivity {
     private TextView titleDisplay;
     private TextView dateDisplay;
     private TextView creditsDisplay;
-    private CheckBox listToggle;
+    public CheckBox viewActiveCheckbox;
 
     private CourseCardAdapter courseCardAdapter;
 
@@ -68,7 +68,7 @@ public class TermViewActivity extends AppCompatActivity {
         dateDisplay.setText(term.getDateRangeDisplay());
         creditsDisplay = findViewById(R.id.credits_display);
         creditsDisplay.setText(term.getCreditsDisplay());
-        listToggle = findViewById(R.id.view_active_checkbox);
+        viewActiveCheckbox = findViewById(R.id.view_active_checkbox);
 
         RecyclerView.LayoutManager courseLayoutManager = new LinearLayoutManager(this);
         courseCardAdapter = new CourseCardAdapter(this, term);
@@ -110,7 +110,7 @@ public class TermViewActivity extends AppCompatActivity {
     }
 
     public void toggleList(View view) {
-        courseCardAdapter.setViewAll(listToggle.isChecked());
+        courseCardAdapter.setViewActive(viewActiveCheckbox.isChecked());
     }
 
     @Override
