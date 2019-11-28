@@ -9,7 +9,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.myterms.application.App;
 import com.example.myterms.application.Date;
 import com.example.myterms.application.MyFunctions;
 import com.example.myterms.assessment.Assessment;
@@ -36,7 +35,7 @@ public class Database extends SQLiteOpenHelper {
     public Database(@Nullable Context context) {
         super(context, "TermTrackerDB", null, 1);
         CORE = this.getWritableDatabase();
-        if (App.BUILD_DB && !built) {
+        if (!built) {
             createTables(CORE);
         }
     }

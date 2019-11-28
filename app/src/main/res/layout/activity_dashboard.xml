@@ -36,5 +36,27 @@
         android:layout_below="@+id/all_terms_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/load_example_db_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/load_example_db_button"
+        android:layout_marginBottom="@dimen/between_button_margin"
+        android:onClick="loadExamples"
+        android:text="For testing purposes, you can load an example database:"
+        android:textColor="#999" />
+
+    <TextView
+        android:id="@+id/load_example_db_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/between_button_margin"
+        android:background="@drawable/bg_button_red"
+        android:onClick="loadExamples"
+        android:padding="5dp"
+        android:text="@string/load_example_database"
+        android:textAlignment="center" />
     
 </RelativeLayout>

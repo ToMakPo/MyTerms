@@ -8,6 +8,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myterms.R;
+import com.example.myterms.application.App;
 import com.example.myterms.term.Term;
 import com.example.myterms.term.TermListActivity;
 import com.example.myterms.term.TermViewActivity;
@@ -49,6 +50,13 @@ public class DashboardActivity extends AppCompatActivity {
     public void viewProgressTracker(View view) {
         Intent intent = new Intent(this, ProgressTrackerActivity.class);
         startActivity(intent);
+    }
+    
+    public void loadExamples(View view) {
+        App.buildDatabase();
+        buildActivity();
+        findViewById(R.id.load_example_db_message).setVisibility(View.GONE);
+        findViewById(R.id.load_example_db_button).setVisibility(View.GONE);
     }
     
     // TODO: 11/17/2019 prevent button from being hit twice.

@@ -52,7 +52,7 @@
     <string name="add_note">Add Note</string>
     <string name="separator">Separator</string>
     <string name="mentor_name">Mentor Name</string>
-    <string name="phone_number_place_holder">123-555-6789</string>
+    <string name="phone_number_place_holder">123–555–6789</string>
     <string name="email_address_place_holder">first_last@url.com</string>
     <string name="close_mentor_view">Close Mentor View</string>
     <string name="performance_name">Performance Name</string>
@@ -113,4 +113,5 @@
     <string name="current_term">Current Term</string>
     <string name="all_terms">All Terms</string>
     <string name="progress_tracker">Progress Tracker</string>
+    <string name="load_example_database">Load Example Database</string>
 </resources>
