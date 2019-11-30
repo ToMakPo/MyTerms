@@ -28,8 +28,8 @@
         android:layout_height="wrap_content"/>
 
     <Button
-        android:id="@+id/progress_tracker_button"
-        android:text="@string/progress_tracker"
+        android:id="@+id/tracker_button"
+        android:text="@string/progress_and_upcoming"
         android:background="@drawable/bg_button_grey"
         android:onClick="viewProgressTracker"
         android:layout_marginBottom="@dimen/between_button_margin"

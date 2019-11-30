@@ -60,6 +60,14 @@ public class App extends Application {
         
         Term spring2020 = Term.create("Spring 2020", Date.of(2020, 4, 1), Date.of(2020, 6, 30));
         Term summer2020 = Term.create("Summer 2020", Date.of(2020, 7, 1), Date.of(2020, 9, 30));
+    
+        Term upcommingTerm = Term.create("Term X", Date.today().addDays(10), Date.today().addDays(10).addMonths(3));
+        Course upcomingCourseA = Course.create(upcommingTerm, "Course A", 5, adamLock)
+                .addAssessment(OBJECTIVE, "Obj 1", "", true)
+                .addAssessment(OBJECTIVE, "Obj 2", "This is the second objective.", Date.today().addDays(25));
+        Course upcomingCourseB = Course.create(upcommingTerm, "Course B", 3, COMPLETED, emmettBrown)
+                .addAssessment(OBJECTIVE, "Obj 1", "", true)
+                .addAssessment(OBJECTIVE, "Obj 2", "This is the second objective.", Date.today().addDays(25), true);
         
         HELPER.printAllTables();
     }

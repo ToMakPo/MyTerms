@@ -15,6 +15,6 @@
     <dimen name="form_info_height">40dp</dimen>
     <dimen name="input_horizontal_padding">10dp</dimen>
     <dimen name="form_info_margin">5dp</dimen>
-    <dimen name="tracker_col_0_width">90dp</dimen>
+    <dimen name="tracker_col_0_width">120dp</dimen>
     <dimen name="tracker_col_1_width">30dp</dimen>
 </resources>

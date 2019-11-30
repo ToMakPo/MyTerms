@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myterms.R;
@@ -16,38 +17,23 @@ import java.util.ArrayList;
 
 public class TermListAdapter extends RecyclerView.Adapter<TermListAdapter.ViewHolder> {
     private ArrayList<Term> terms;
-    private ProgressTrackerActivity activity;
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        private Term term;
-
-        private TextView titleDisplay;
-        private TextView dateDisplay;
-        private TextView creditsDisplay;
-        private ImageView passedIcon;
-
-        ViewHolder(@NonNull View itemView, final ProgressTrackerActivity activity) {
-            super(itemView);
-
-            titleDisplay = itemView.findViewById(R.id.title_display);
-            dateDisplay = itemView.findViewById(R.id.date_display);
-            creditsDisplay = itemView.findViewById(R.id.credits_display);
-            passedIcon = itemView.findViewById(R.id.completed_icon);
-
-            itemView.setOnClickListener(view -> activity.viewTerm(term));
-        }
-    }
-
-    TermListAdapter(ProgressTrackerActivity activity) {
+    private TrackerActivity activity;
+    
+    TermListAdapter(TrackerActivity activity) {
         this.terms = Term.findAllUpcoming();
         this.activity = activity;
         
+        activity.upcomingTermRecycler.setLayoutManager(new LinearLayoutManager(activity));
         activity.upcomingTermRecycler.setAdapter(this);
+        setVisibility();
+    }
+    
+    public void refresh() {
+        terms.clear();
+        terms.addAll(Term.findAllUpcoming());
+        setVisibility();
         
-//        if (terms.isEmpty()) {
-            activity.upcomingTermLabel.setVisibility(View.GONE);
-            activity.upcomingTermRecycler.setVisibility(View.GONE);
-//        }
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -73,19 +59,34 @@ public class TermListAdapter extends RecyclerView.Adapter<TermListAdapter.ViewHo
     public int getItemCount() {
         return terms.size();
     }
-
-    public void refresh() {
-        terms.clear();
-        terms.addAll(Term.findAllUpcoming());
-        
+    
+    public void setVisibility() {
         if (terms.isEmpty()) {
-            activity.upcomingTermLabel.setVisibility(View.GONE);
+            activity.noUpcomingTermMessage.setVisibility(View.VISIBLE);
             activity.upcomingTermRecycler.setVisibility(View.GONE);
         } else {
-            activity.upcomingTermLabel.setVisibility(View.VISIBLE);
+            activity.noUpcomingTermMessage.setVisibility(View.GONE);
             activity.upcomingTermRecycler.setVisibility(View.VISIBLE);
         }
+    }
+    
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        private Term term;
         
-        notifyDataSetChanged();
+        private TextView titleDisplay;
+        private TextView dateDisplay;
+        private TextView creditsDisplay;
+        private ImageView passedIcon;
+        
+        ViewHolder(@NonNull View itemView, final TrackerActivity activity) {
+            super(itemView);
+            
+            titleDisplay = itemView.findViewById(R.id.title_display);
+            dateDisplay = itemView.findViewById(R.id.date_display);
+            creditsDisplay = itemView.findViewById(R.id.credits_display);
+            passedIcon = itemView.findViewById(R.id.completed_icon);
+            
+            itemView.setOnClickListener(view -> activity.viewTerm(term));
+        }
     }
 }

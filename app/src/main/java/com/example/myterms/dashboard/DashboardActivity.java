@@ -12,7 +12,7 @@ import com.example.myterms.application.App;
 import com.example.myterms.term.Term;
 import com.example.myterms.term.TermListActivity;
 import com.example.myterms.term.TermViewActivity;
-import com.example.myterms.tracker.ProgressTrackerActivity;
+import com.example.myterms.tracker.TrackerActivity;
 
 import static com.example.myterms.application.Codes.REQUEST_VIEW_TERM;
 
@@ -48,7 +48,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
     
     public void viewProgressTracker(View view) {
-        Intent intent = new Intent(this, ProgressTrackerActivity.class);
+        Intent intent = new Intent(this, TrackerActivity.class);
         startActivity(intent);
     }
     

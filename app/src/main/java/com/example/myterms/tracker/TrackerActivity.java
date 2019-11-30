@@ -24,7 +24,7 @@ import static com.example.myterms.course.Course.Status.DROPPED;
 import static com.example.myterms.course.Course.Status.IN_PROGRESS;
 import static com.example.myterms.course.Course.Status.PLAN_TO_TAKE;
 
-public class ProgressTrackerActivity extends AppCompatActivity {
+public class TrackerActivity extends AppCompatActivity {
     
     TextView courseInProgressDisplay;
     TextView coursePlanToTakeDisplay;
@@ -35,20 +35,20 @@ public class ProgressTrackerActivity extends AppCompatActivity {
     TextView assessmentCompleteDisplay;
     TextView assessmentCompletionDisplay;
     
-    TextView upcomingTermLabel;
+    TextView noUpcomingTermMessage;
     RecyclerView upcomingTermRecycler;
     TermListAdapter termListAdapter;
-    TextView upcomingCourseLabel;
+    TextView noUpcomingCourseMessage;
     RecyclerView upcomingCourseRecycler;
     CourseListAdapter courseListAdapter;
-    TextView upcomingAssessmentLabel;
+    TextView noUpcomingAssessmentMessage;
     RecyclerView upcomingAssessmentRecycler;
     AssessmentListAdapter assessmentListAdapter;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_progress_tracker);
+        setContentView(R.layout.activity_tracker);
         
         buildActivity();
     }
@@ -64,7 +64,7 @@ public class ProgressTrackerActivity extends AppCompatActivity {
     
     public void buildActivity() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Progress Tracker");
+        actionBar.setTitle("Progress and Scheduler");
         actionBar.setDisplayHomeAsUpEnabled(true);
         
         ///   COURSE IN PROGRESS   ///
@@ -100,17 +100,17 @@ public class ProgressTrackerActivity extends AppCompatActivity {
         setAssessmentCompletionDisplay();
     
         ///   UPCOMING TERMS   ///
-        upcomingTermLabel = findViewById(R.id.upcoming_terms_label);
+        noUpcomingTermMessage = findViewById(R.id.no_upcoming_terms_message);
         upcomingTermRecycler = findViewById(R.id.upcoming_terms_recycler);
         termListAdapter = new TermListAdapter(this);
     
         ///   UPCOMING COURSES   ///
-        upcomingCourseLabel = findViewById(R.id.upcoming_courses_label);
+        noUpcomingCourseMessage = findViewById(R.id.no_upcoming_courses_message);
         upcomingCourseRecycler = findViewById(R.id.upcoming_courses_recycler);
         courseListAdapter = new CourseListAdapter(this);
     
         ///   UPCOMING ASSESSMENTS   ///
-        upcomingAssessmentLabel = findViewById(R.id.upcoming_assessments_label);
+        noUpcomingAssessmentMessage = findViewById(R.id.no_upcoming_assessments_message);
         upcomingAssessmentRecycler = findViewById(R.id.upcoming_assessments_recycler);
         assessmentListAdapter = new AssessmentListAdapter(this);
     }

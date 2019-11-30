@@ -39,7 +39,7 @@
         <activity
             android:name=".note.NoteEditActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".tracker.ProgressTrackerActivity" />
+        <activity android:name=".tracker.TrackerActivity" />
         <activity android:name=".term.TermListActivity" />
 
         <receiver

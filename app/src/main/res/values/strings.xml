@@ -28,6 +28,7 @@
     <string name="term">Term</string>
     <string name="mentors">Mentors</string>
     <string name="credits">Credits</string>
+    <string name="credits_">Credits:</string>
     <string name="new_mentor">New Mentor</string>
     <string name="select_mentors">Select Mentors</string>
     <string name="select_term">Select Term</string>
@@ -114,4 +115,10 @@
     <string name="all_terms">All Terms</string>
     <string name="progress_tracker">Progress Tracker</string>
     <string name="load_example_database">Load Example Database</string>
+    <string name="scheduler">Scheduler</string>
+    <string name="no_upcoming_terms_message">No upcoming terms within the next 30 days.</string>
+    <string name="no_upcoming_courses_message">No upcoming courses within the next 30 days.</string>
+    <string name="no_upcoming_assessments_message">No upcoming assessments within the next 30 days.</string>
+    <string name="tracker">Tracker</string>
+    <string name="progress_and_upcoming">Progress and Upcoming</string>
 </resources>
