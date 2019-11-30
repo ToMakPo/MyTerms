@@ -11,7 +11,7 @@ import com.example.myterms.course.Course;
 
 import java.util.ArrayList;
 
-import static com.example.myterms.application.App.HELPER;
+import static com.example.myterms.application.App.DATABASE;
 
 public class Note implements Comparable<Note>, Parcelable {
     private long id;
@@ -100,8 +100,8 @@ public class Note implements Comparable<Note>, Parcelable {
 
         values.put("course_id", course.getId());
         values.put("message", message);
-
-        long id = HELPER.insert("Note", values);
+    
+        long id = DATABASE.insert("Note", values);
 
         return (id >= 0) ? findByID(id) : null;
     }
@@ -110,7 +110,7 @@ public class Note implements Comparable<Note>, Parcelable {
         return findAll("");
     }
     public static ArrayList<Note> findAll(String conditions) {
-        Cursor data = HELPER.getData("Note", conditions);
+        Cursor data = DATABASE.getData("Note", conditions);
         ArrayList<Note> list = new ArrayList<>();
         while (data.moveToNext()) {
             list.add(parseSQL(data));
@@ -140,13 +140,13 @@ public class Note implements Comparable<Note>, Parcelable {
         String sql = "UPDATE Note\n" +
                 "SET message = '" + message + "' \n" +
                 "WHERE id = " + id + ";";
-        HELPER.update(sql);
+        DATABASE.update(sql);
     }
 
     public void delete() {
         String sql = "DELETE FROM Note\n" +
                 "WHERE id = " + id + ";";
-        HELPER.delete(sql);
+        DATABASE.delete(sql);
     }
     
     @Override

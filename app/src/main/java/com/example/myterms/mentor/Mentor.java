@@ -12,7 +12,7 @@ import com.example.myterms.course.Course;
 
 import java.util.ArrayList;
 
-import static com.example.myterms.application.App.HELPER;
+import static com.example.myterms.application.App.DATABASE;
 
 public class Mentor implements Comparable<Mentor>, Parcelable {
     private long id;
@@ -79,13 +79,17 @@ public class Mentor implements Comparable<Mentor>, Parcelable {
     public String getEmailAddress() {
         return emailAddress;
     }
-    public ArrayList<Course> getCourses() {
-        Cursor data = HELPER.getData("CourseMentor", "WHERE mentor_id = " + id);
-        ArrayList<Course> list = new ArrayList<>();
-        while (data.moveToNext()) {
-            list.add(Course.findByID(data.getInt(1)));
-        }
-        return list;
+    
+    public static Mentor create(String name, String phoneNumber, String emailAddress) {
+        ContentValues values = new ContentValues();
+        
+        values.put("name", name);
+        values.put("phone", stripPhoneNumber(phoneNumber));
+        values.put("email", emailAddress);
+        
+        long id = DATABASE.insert("Mentor", values);
+        
+        return (id >= 0) ? findByID(id) : null;
     }
 
     @Override
@@ -111,16 +115,14 @@ public class Mentor implements Comparable<Mentor>, Parcelable {
 
         return new Mentor(id, name, phoneNumber, emailAddress);
     }
-    public static Mentor create(String name, String phoneNumber, String emailAddress) {
-        ContentValues values = new ContentValues();
-
-        values.put("name", name);
-        values.put("phone", stripPhoneNumber(phoneNumber));
-        values.put("email", emailAddress);
-
-        long id = HELPER.insert("Mentor", values);
-
-        return (id >= 0) ? findByID(id) : null;
+    
+    public static ArrayList<Mentor> findAll(String conditions) {
+        Cursor data = DATABASE.getData("Mentor", conditions);
+        ArrayList<Mentor> list = new ArrayList<>();
+        while (data.moveToNext()) {
+            list.add(parseSQL(data));
+        }
+        return list;
     }
 
     private static String stripPhoneNumber(String phoneNumber) {
@@ -142,11 +144,12 @@ public class Mentor implements Comparable<Mentor>, Parcelable {
     public static ArrayList<Mentor> findAll() {
         return findAll("");
     }
-    public static ArrayList<Mentor> findAll(String conditions) {
-        Cursor data = HELPER.getData("Mentor", conditions);
-        ArrayList<Mentor> list = new ArrayList<>();
+    
+    public ArrayList<Course> getCourses() {
+        Cursor data = DATABASE.getData("CourseMentor", "WHERE mentor_id = " + id);
+        ArrayList<Course> list = new ArrayList<>();
         while (data.moveToNext()) {
-            list.add(parseSQL(data));
+            list.add(Course.findByID(data.getInt(1)));
         }
         return list;
     }
@@ -193,7 +196,7 @@ public class Mentor implements Comparable<Mentor>, Parcelable {
                 "\tphone = '" + phoneNumber + "', \n" +
                 "\temail = '" + emailAddress + "'\n" +
                 "WHERE id = " + id + ";";
-        HELPER.update(sql);
+        DATABASE.update(sql);
     }
 
     public void delete() {
@@ -201,11 +204,11 @@ public class Mentor implements Comparable<Mentor>, Parcelable {
 
         String sql = "DELETE FROM Mentor\n" +
                 "WHERE id = " + id + ";";
-        HELPER.delete(sql);
+        DATABASE.delete(sql);
 
         sql = "DELETE FROM CourseMentor\n" +
                 "WHERE mentor_id = " + id + ";";
-        HELPER.delete(sql);
+        DATABASE.delete(sql);
 
         for (Course course : courses) {
             if (course.getMentors().isEmpty())

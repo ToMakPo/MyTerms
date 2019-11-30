@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -29,15 +30,13 @@ import static com.example.myterms.application.MyFunctions.repeat;
 public class Database extends SQLiteOpenHelper {
     private static final String TAG = "app: Database";
     private static final String SQL = "SQL";
-    private static boolean built = false;
     public final SQLiteDatabase CORE;
 
     public Database(@Nullable Context context) {
         super(context, "TermTrackerDB", null, 1);
         CORE = this.getWritableDatabase();
-        if (!built) {
-            createTables(CORE);
-        }
+    
+        createTables(CORE);
     }
 
     @Override
@@ -46,15 +45,13 @@ public class Database extends SQLiteOpenHelper {
     }
 
     private void createTables(SQLiteDatabase db) {
+        String sql;
+    
         //////////////////////////////////////
         ///       CREATE TERM TABLE        ///
         //////////////////////////////////////
         String tableName = "Term";
-        String sql = "DROP TABLE IF EXISTS '" + tableName + "';'";
-        Log.i(SQL, "Drop " + tableName + " table: \n" + sql);
-        db.execSQL(sql);
-
-        sql = "CREATE TABLE '" + tableName + "' (\n" +
+        sql = "CREATE TABLE IF NOT EXISTS '" + tableName + "' (\n" +
                 "\tid INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "\ttitle TEXT UNIQUE,\n" +
                 "\tstart_date INTEGER,\n" +
@@ -67,11 +64,7 @@ public class Database extends SQLiteOpenHelper {
         ///      CREATE COURSE TABLE       ///
         //////////////////////////////////////
         tableName = "Course";
-        sql = "DROP TABLE IF EXISTS '" + tableName + "';'";
-        Log.i(SQL, "Drop " + tableName + " table: \n" + sql);
-        db.execSQL(sql);
-
-        sql = "CREATE TABLE '" + tableName + "' (\n" +
+        sql = "CREATE TABLE IF NOT EXISTS '" + tableName + "' (\n" +
                 "\tid INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "\tterm_id INTEGER,\n" +
                 "\ttitle TEXT,\n" +
@@ -89,11 +82,7 @@ public class Database extends SQLiteOpenHelper {
         ///      CREATE MENTOR TABLE       ///
         //////////////////////////////////////
         tableName = "Mentor";
-        sql = "DROP TABLE IF EXISTS '" + tableName + "';'";
-        Log.i(SQL, "Drop " + tableName + " table: \n" + sql);
-        db.execSQL(sql);
-
-        sql = "CREATE TABLE '" + tableName + "' (\n" +
+        sql = "CREATE TABLE IF NOT EXISTS '" + tableName + "' (\n" +
                 "\tid INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "\tname TEXT UNIQUE,\n" +
                 "\tphone TEXT,\n" +
@@ -106,11 +95,7 @@ public class Database extends SQLiteOpenHelper {
         ///   CREATE COURSE MENTOR TABLE   ///
         //////////////////////////////////////
         tableName = "CourseMentor";
-        sql = "DROP TABLE IF EXISTS '" + tableName + "';'";
-        Log.i(SQL, "Drop " + tableName + " table: \n" + sql);
-        db.execSQL(sql);
-
-        sql = "CREATE TABLE '" + tableName + "' (\n" +
+        sql = "CREATE TABLE IF NOT EXISTS '" + tableName + "' (\n" +
                 "\tid INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "\tcourse_id INTEGER,\n" +
                 "\tmentor_id INTEGER\n" +
@@ -122,11 +107,7 @@ public class Database extends SQLiteOpenHelper {
         ///    CREATE ASSESSMENT TABLE     ///
         //////////////////////////////////////
         tableName = "Assessment";
-        sql = "DROP TABLE IF EXISTS '" + tableName + "';'";
-        Log.i(SQL, "Drop " + tableName + " table: \n" + sql);
-        db.execSQL(sql);
-
-        sql = "CREATE TABLE '" + tableName + "' (\n" +
+        sql = "CREATE TABLE IF NOT EXISTS '" + tableName + "' (\n" +
                 "\tid INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "\tcourse_id INTEGER,\n" +
                 "\ttype INTEGER,\n" +
@@ -143,19 +124,19 @@ public class Database extends SQLiteOpenHelper {
         ///       CREATE NOTE TABLE        ///
         //////////////////////////////////////
         tableName = "Note";
-        sql = "DROP TABLE IF EXISTS '" + tableName + "';'";
-        Log.i(SQL, "Drop " + tableName + " table: \n" + sql);
-        db.execSQL(sql);
-
-        sql = "CREATE TABLE '" + tableName + "' (\n" +
+        sql = "CREATE TABLE IF NOT EXISTS '" + tableName + "' (\n" +
                 "\tid INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "\tcourse_id INTEGER,\n" +
                 "\tmessage TEXT\n" +
                 ");";
         Log.i(SQL, "Creating " + tableName + " table: \n" + sql);
         db.execSQL(sql);
-
-        built = true;
+    }
+    
+    private void dropTable(SQLiteDatabase db, String tableName) {
+        String sql = "DROP TABLE IF EXISTS '" + tableName + "';'";
+        Log.i(SQL, "Drop " + tableName + " table: \n" + sql);
+        db.execSQL(sql);
     }
 
     @Override
@@ -204,6 +185,18 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Log.i(SQL, "Delete row:\n" + sql);
         db.execSQL(sql);
+    }
+    
+    public boolean alreadyBuilt() {
+        SQLiteDatabase checkDB;
+        try {
+            checkDB = SQLiteDatabase.openDatabase("TermTrackerDB", null, SQLiteDatabase.OPEN_READONLY);
+            checkDB.close();
+        } catch (SQLiteException e) {
+            return false;
+        }
+        
+        return tablesAlreadyBuilt(checkDB);
     }
 
     public boolean tablesAlreadyBuilt(SQLiteDatabase db) {

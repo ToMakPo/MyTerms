@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.example.myterms.application.App.HELPER;
+import static com.example.myterms.application.App.DATABASE;
 import static com.example.myterms.application.App.MAIN;
 import static com.example.myterms.assessment.Assessment.Type.OBJECTIVE;
 import static com.example.myterms.assessment.Assessment.Type.PERFORMANCE;
@@ -121,13 +121,34 @@ public class Course implements Comparable<Course>, Parcelable {
     public Status getStatus() {
         return status;
     }
-    public ArrayList<Mentor> getMentors() {
-        Cursor data = HELPER.getData("CourseMentor", "WHERE course_id = " + id);
-        ArrayList<Mentor> list = new ArrayList<>();
-        while (data.moveToNext()) {
-            list.add(Mentor.findByID(data.getInt(2)));
+    
+    private static Course create(Term term, String title, int credits, Date startDate, Date endDate, Date startAlarm, Date endAlarm, Status status) {
+        if (!term.hasCourseWithTitle(title)) {
+            ContentValues values = new ContentValues();
+            
+            values.put("term_id", term.getId());
+            values.put("title", title);
+            values.put("credits", credits);
+            values.put("start_date", startDate.toLong());
+            values.put("end_date", endDate.toLong());
+            values.put("start_alarm", startAlarm.toLong());
+            values.put("end_alarm", endAlarm.toLong());
+            values.put("status", status.index);
+            
+            long id = DATABASE.insert("Course", values);
+            
+            Course course = (id >= 0) ? findByID(id) : null;
+            if (course != null) {
+                course.setStartAlarm();
+                course.setEndAlarm();
+            }
+            
+            return course;
+        } else {
+            Log.e(TAG, "create: Could not create this course because the term already has a course with this title.");
+            
+            return null;
         }
-        return list;
     }
     public ArrayList<Assessment> getObjectives() {
         return Assessment.findAllByType(this, OBJECTIVE);
@@ -200,17 +221,14 @@ public class Course implements Comparable<Course>, Parcelable {
     public Mentor addMentor(String name, String phoneNumber, String emailAddress) {
         return addMentor(Mentor.create(name, phoneNumber, emailAddress));
     }
-    public Mentor addMentor(Mentor mentor) {
-        if (mentor == null) return null;
-
-        ContentValues values = new ContentValues();
-
-        values.put("course_id", id);
-        values.put("mentor_id", mentor.getId());
-
-        long id = HELPER.insert("CourseMentor", values);
-
-        return (id >= 0) ? mentor : null;
+    
+    public static ArrayList<Course> findAll(String conditions) {
+        Cursor data = DATABASE.getData("Course", conditions);
+        ArrayList<Course> list = new ArrayList<>();
+        while (data.moveToNext()) {
+            list.add(parseSQL(data));
+        }
+        return list;
     }
     public ArrayList<Mentor> addMentors(Mentor ...mentors) {
         return addMentors(new ArrayList<>(Arrays.asList(mentors)));
@@ -357,45 +375,31 @@ public class Course implements Comparable<Course>, Parcelable {
 
         return course;
     }
-    private static Course create(Term term, String title, int credits, Date startDate, Date endDate, Date startAlarm, Date endAlarm, Status status) {
-        if (!term.hasCourseWithTitle(title)) {
-            ContentValues values = new ContentValues();
-
-            values.put("term_id", term.getId());
-            values.put("title", title);
-            values.put("credits", credits);
-            values.put("start_date", startDate.toLong());
-            values.put("end_date", endDate.toLong());
-            values.put("start_alarm", startAlarm.toLong());
-            values.put("end_alarm", endAlarm.toLong());
-            values.put("status", status.index);
-
-            long id = HELPER.insert("Course", values);
     
-            Course course = (id >= 0) ? findByID(id) : null;
-            if (course != null) {
-                course.setStartAlarm();
-                course.setEndAlarm();
-            }
-    
-            return course;
-        } else {
-            Log.e(TAG, "create: Could not create this course because the term already has a course with this title.");
-
-            return null;
+    public ArrayList<Mentor> getMentors() {
+        Cursor data = DATABASE.getData("CourseMentor", "WHERE course_id = " + id);
+        ArrayList<Mentor> list = new ArrayList<>();
+        while (data.moveToNext()) {
+            list.add(Mentor.findByID(data.getInt(2)));
         }
+        return list;
     }
 
     public static ArrayList<Course> findAll() {
         return findAll("");
     }
-    public static ArrayList<Course> findAll(String conditions) {
-        Cursor data = HELPER.getData("Course", conditions);
-        ArrayList<Course> list = new ArrayList<>();
-        while (data.moveToNext()) {
-            list.add(parseSQL(data));
-        }
-        return list;
+    
+    public Mentor addMentor(Mentor mentor) {
+        if (mentor == null) return null;
+        
+        ContentValues values = new ContentValues();
+        
+        values.put("course_id", id);
+        values.put("mentor_id", mentor.getId());
+        
+        long id = DATABASE.insert("CourseMentor", values);
+        
+        return (id >= 0) ? mentor : null;
     }
     public static ArrayList<Course> findAllByTitle(String title) {
         return findAll("WHERE title = '" + title + "'");
@@ -468,7 +472,7 @@ public class Course implements Comparable<Course>, Parcelable {
                 String sql = "UPDATE Course\n" +
                         "SET term = " + term.getId() + ", \n" +
                         "WHERE id = " + id + ";";
-                HELPER.update(sql);
+                DATABASE.update(sql);
             } else {
                 Log.e(TAG, "create: Could not move this course because the new term already has a course with this title.");
             }
@@ -480,7 +484,7 @@ public class Course implements Comparable<Course>, Parcelable {
         String sql = "UPDATE Course\n" +
                 "SET status = " + status.index + "\n" +
                 "WHERE id = " + id + ";";
-        HELPER.update(sql);
+        DATABASE.update(sql);
         
         if (isActive()) {
             setStartAlarm();
@@ -495,7 +499,7 @@ public class Course implements Comparable<Course>, Parcelable {
     public void updateMentors(ArrayList<Mentor> mentors) {
         String sql = "DELETE FROM CourseMentor\n" +
                 "WHERE course_id = " + id + ";";
-        HELPER.delete(sql);
+        DATABASE.delete(sql);
 
         addMentors(mentors);
     }
@@ -526,7 +530,7 @@ public class Course implements Comparable<Course>, Parcelable {
                 "\tend_date = '" + endDate.toLong() + "', \n" +
                 "\tstatus = " + status.index + "\n" +
                 "WHERE id = " + id + ";";
-        HELPER.update(sql);
+        DATABASE.update(sql);
     
         if (isActive()) {
             setStartAlarm();
@@ -540,16 +544,16 @@ public class Course implements Comparable<Course>, Parcelable {
     public void delete() {
         String sql = "DELETE FROM Assessment\n" +
                 "WHERE course_id = " + id + ";";
-        HELPER.delete(sql);
+        DATABASE.delete(sql);
         sql = "DELETE FROM Note\n" +
                 "WHERE course_id = " + id + ";";
-        HELPER.delete(sql);
+        DATABASE.delete(sql);
         sql = "DELETE FROM CourseMentor\n" +
                 "WHERE course_id = " + id + ";";
-        HELPER.delete(sql);
+        DATABASE.delete(sql);
         sql = "DELETE FROM Course\n" +
                 "WHERE id = " + id + ";";
-        HELPER.delete(sql);
+        DATABASE.delete(sql);
     
         cancelStartAlarm();
         cancelEndAlarm();

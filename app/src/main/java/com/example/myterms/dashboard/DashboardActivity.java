@@ -14,6 +14,7 @@ import com.example.myterms.term.TermListActivity;
 import com.example.myterms.term.TermViewActivity;
 import com.example.myterms.tracker.TrackerActivity;
 
+import static com.example.myterms.application.App.DATABASE;
 import static com.example.myterms.application.Codes.REQUEST_VIEW_TERM;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -34,6 +35,11 @@ public class DashboardActivity extends AppCompatActivity {
         currentTerm = Term.findCurrentTerm();
         
         findViewById(R.id.current_term_button).setVisibility(currentTerm == null ? View.GONE : View.VISIBLE);
+        // todo: remove example db for final build.
+        if (DATABASE.tablesAlreadyPopulated(DATABASE.CORE)) {
+            findViewById(R.id.load_example_db_message).setVisibility(View.GONE);
+            findViewById(R.id.load_example_db_button).setVisibility(View.GONE);
+        }
     }
     
     public void viewCurrentTerm(View view) {

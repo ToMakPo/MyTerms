@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-import static com.example.myterms.application.App.HELPER;
+import static com.example.myterms.application.App.DATABASE;
 
 public class Term implements Comparable<Term>, Parcelable {
     private static final String TAG = "app: Term";
@@ -175,8 +175,8 @@ public class Term implements Comparable<Term>, Parcelable {
         values.put("title", title);
         values.put("start_date", startDate.toLong());
         values.put("end_date", endDate.toLong());
-
-        long id = HELPER.insert("Term", values);
+    
+        long id = DATABASE.insert("Term", values);
 
         return (id >= 0) ? findByID(id) : null;
     }
@@ -185,7 +185,7 @@ public class Term implements Comparable<Term>, Parcelable {
         return findAll("");
     }
     public static ArrayList<Term> findAll(String conditions) {
-        Cursor data = HELPER.getData("Term", conditions);
+        Cursor data = DATABASE.getData("Term", conditions);
         ArrayList<Term> list = new ArrayList<>();
         while (data.moveToNext()) {
             list.add(parseSQL(data));
@@ -271,14 +271,14 @@ public class Term implements Comparable<Term>, Parcelable {
                 "\tstart_date = '" + startDate.toLong() + "', \n" +
                 "\tend_date = '" + endDate.toLong() + "'\n" +
                 "WHERE id = " + id + ";";
-        HELPER.update(sql);
+        DATABASE.update(sql);
     }
 
     public void delete() {
         if (getCourses().isEmpty()) {
             String sql = "DELETE FROM Term\n" +
                     "WHERE id = " + id + ";";
-            HELPER.delete(sql);
+            DATABASE.delete(sql);
         } else {
             Log.e(TAG, "delete: term could not delete term because it still has courses");
             // TODO: 10/24/2019 ask user for next steps
@@ -291,11 +291,11 @@ public class Term implements Comparable<Term>, Parcelable {
         String sql = "UPDATE Course\n" +
                 "SET term_id = " + newTermID + "\n" +
                 "WHERE term_id = " + id + ";";
-        HELPER.update(sql);
+        DATABASE.update(sql);
 
         sql = "DELETE FROM Term\n" +
                 "WHERE id = " + id + ";";
-        HELPER.delete(sql);
+        DATABASE.delete(sql);
     }
 
     public void deleteCoursesAndDelete() {
@@ -305,7 +305,7 @@ public class Term implements Comparable<Term>, Parcelable {
 
         String sql = "DELETE FROM Term\n" +
                 "WHERE id = " + id + ";";
-        HELPER.delete(sql);
+        DATABASE.delete(sql);
     }
     
     @Override

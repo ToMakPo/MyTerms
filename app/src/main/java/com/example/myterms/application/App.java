@@ -17,7 +17,7 @@ import static com.example.myterms.course.Course.Status.PLAN_TO_TAKE;
 
 public class App extends Application {
     public static Context MAIN;
-    public static Database HELPER;
+    public static Database DATABASE;
     
     public static void buildDatabase() {
         Mentor juliaHuang = Mentor.create("Julia Huang", "2535557489", "huang.juliy@sru.edu");
@@ -26,11 +26,11 @@ public class App extends Application {
         Mentor katelynQuill = Mentor.create("Katelyn Quill", "2535553486", "quill.katelyn@sru.edu");
         Mentor pollyNomial = Mentor.create("Polly Nomial", "2535553158", "nomial.polly@sru.edu");
         Mentor calCulus = Mentor.create("Cal Culus", "2535554587", "culus.cal@sru.edu");
-        
+
         Term summer2019 = Term.create("Summer 2019", Date.of(2019, 4, 1), Date.of(2019, 6, 30));
         Course.create(summer2019, "Science 102 - Molecular Bonds", 2, COMPLETED, emmettBrown)
                 .addAssessment(OBJECTIVE, "Obj 1", "this is an objective.", true);
-        
+
         Term fall2019 = Term.create("Fall 2019", Date.of(2019, 10, 1), Date.of(2019, 12, 31));
         Course.create(fall2019, "Math 101 - Math Basics", 3, COMPLETED, pollyNomial)
                 .addAssessment(OBJECTIVE, "High School Math Competency", "The student can demonstrate at least high school graduate level competency in math.", true)
@@ -53,11 +53,11 @@ public class App extends Application {
                 .addAssessment(PERFORMANCE, "Pre-assessment", "Checks to see where the students understanding is at the create of the course.")
                 .addAssessment(PERFORMANCE, "Final Project", "The student will write a 15 page paper on a provided subject, using at least 10 sources.");
         Course.create(fall2019, "Science 101 - Intro to Science", 3, DROPPED, adamLock, emmettBrown);
-        
+    
         Term winter2020 = Term.create("Winter 2020", Date.of(2020, 1, 1), Date.of(2020, 3, 31));
         Course.create(winter2020, "Math 102 - Basic Calculus", 4, PLAN_TO_TAKE, pollyNomial, calCulus);
         Course.create(winter2020, "Science 101 - Intro to Science", 3, PLAN_TO_TAKE, adamLock, emmettBrown);
-        
+    
         Term spring2020 = Term.create("Spring 2020", Date.of(2020, 4, 1), Date.of(2020, 6, 30));
         Term summer2020 = Term.create("Summer 2020", Date.of(2020, 7, 1), Date.of(2020, 9, 30));
     
@@ -68,8 +68,8 @@ public class App extends Application {
         Course upcomingCourseB = Course.create(upcommingTerm, "Course B", 3, COMPLETED, emmettBrown)
                 .addAssessment(OBJECTIVE, "Obj 1", "", true)
                 .addAssessment(OBJECTIVE, "Obj 2", "This is the second objective.", Date.today().addDays(25), true);
-        
-        HELPER.printAllTables();
+    
+        DATABASE.printAllTables();
     }
     
     @Override
@@ -77,6 +77,6 @@ public class App extends Application {
         super.onCreate();
         
         MAIN = App.this;
-        HELPER = new Database(MAIN);
+        DATABASE = new Database(MAIN);
     }
 }

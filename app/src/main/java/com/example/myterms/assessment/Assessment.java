@@ -15,7 +15,7 @@ import com.example.myterms.course.Course;
 
 import java.util.ArrayList;
 
-import static com.example.myterms.application.App.HELPER;
+import static com.example.myterms.application.App.DATABASE;
 import static com.example.myterms.notifications.Alarm.ASSESSMENT_COMPLETE_CHANNEL;
 
 public class Assessment implements Comparable<Assessment>, Parcelable {
@@ -172,8 +172,8 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         values.put("completion_date", completionDate.toLong());
         values.put("alarm", alarm.toLong());
         values.put("complete", complete ? 1 : 0);
-        
-        long id = HELPER.insert("Assessment", values);
+    
+        long id = DATABASE.insert("Assessment", values);
         
         Assessment assessment = (id >= 0) ? findByID(id) : null;
         if (assessment != null) {
@@ -206,7 +206,7 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         return findAll("");
     }
     public static ArrayList<Assessment> findAll(String conditions) {
-        Cursor data = HELPER.getData("Assessment", conditions);
+        Cursor data = DATABASE.getData("Assessment", conditions);
         ArrayList<Assessment> list = new ArrayList<>();
         while (data.moveToNext()) {
             list.add(parseSQL(data));
@@ -253,7 +253,7 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
                 "\talarm = '" + alarm.toLong() + "', \n" +
                 "\tcomplete = " + (complete ? 1 : 0) + "\n" +
                 "WHERE id = " + id + ";";
-        HELPER.update(sql);
+        DATABASE.update(sql);
     
         setAlarm();
     }
@@ -263,7 +263,7 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         String sql = "UPDATE Assessment\n" +
                 "SET complete = 1\n" +
                 "WHERE id = " + id + ";";
-        HELPER.update(sql);
+        DATABASE.update(sql);
         cancelAlarm();
     }
     public void markAsIncomplete() {
@@ -271,7 +271,7 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         String sql = "UPDATE Assessment\n" +
                 "SET complete = 0\n" +
                 "WHERE id = " + id + ";";
-        HELPER.update(sql);
+        DATABASE.update(sql);
         setAlarm();
     }
 
@@ -279,7 +279,7 @@ public class Assessment implements Comparable<Assessment>, Parcelable {
         cancelAlarm();
         String sql = "DELETE FROM Assessment\n" +
                 "WHERE id = " + id + ";";
-        HELPER.delete(sql);
+        DATABASE.delete(sql);
     }
     
     @Override
